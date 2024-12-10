@@ -1,6 +1,6 @@
 # QRU (큐알유) 🤝
 
-"`QRU`"는 "**QR**" 과 "**Who Are You**"를 결합한 이름으로, 사용자가 자신의 정보를 입력하여 QR 코드를 생성하고 이를 통해 디지털 명함을 공유할 수 있는 웹 애플리케이션입니다.  
+`QRU`는 "**QR**" 과 "**Who Are You**"를 결합한 이름으로, 사용자가 자신의 정보를 입력하여 QR 코드를 생성하고 이를 통해 디지털 명함을 공유할 수 있는 웹 애플리케이션입니다.  
 QR 코드를 통해 손쉽게 자신을 소개하거나 랜덤 셔플 기능으로 새로운 친구를 만날 수 있습니다.
 
 ## 주요 기능 ✨
@@ -119,6 +119,107 @@ Firestore 컬렉션 및 문서 기반의 구조를 활용하여 데이터를 관
      - `visibleToWhom`: 특정 정보를 가진 사용자에게만 공개
    - `createdAt`: 생성 날짜
    - `updatedAt`: 수정 날짜
+
+## 프로젝트 구조 📂
+
+### 기본 프로젝트 구조
+
+```bash
+QRU/
+├── public/                   # 정적 파일
+│   └── logo.svg              # 로고 및 favicon
+├── src/                      # 소스 코드
+│   ├── assets/               # 이미지, 폰트, 아이콘 등
+│   │   └── logo.svg
+│   ├── components/           # 재사용 가능한 UI 컴포넌트
+│   │   ├── common/           # 공통 컴포넌트 (버튼, 모달 등)
+│   │   │   ├── Button.jsx
+│   │   │   ├── Modal.jsx
+│   │   │   └── QRCode.jsx
+│   │   ├── layout/           # 레이아웃 관련 컴포넌트
+│   │   │   ├── Header.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   └── Sidebar.jsx
+│   │   └── Logo.jsx
+│   ├── contexts/             # Context API (전역 상태 관리)
+│   │   ├── AuthContext.jsx
+│   │   ├── ThemeContext.jsx
+│   │   └── QRCodeContext.jsx
+│   ├── hooks/                # 커스텀 훅
+│   │   └── useAuth.js
+│   ├── pages/                # 라우트 페이지
+│   │   ├── Home.jsx
+│   │   ├── About.jsx
+│   │   ├── Profile.jsx
+│   │   ├── QRShuffle.jsx
+│   │   └── EditCard.jsx
+│   ├── services/             # API 호출 로직
+│   │   └── api.js
+│   ├── styles/               # 전역 스타일 및 Tailwind 설정
+│   │   ├── globals.css
+│   │   └── tailwind.css
+│   ├── App.jsx               # 주요 컴포넌트
+│   ├── main.jsx              # 엔트리 포인트
+│   └── vite-env.d.ts         # Vite 환경 변수 타입
+├── .env                      # 환경 변수
+├── tailwind.config.js        # Tailwind 설정
+├── postcss.config.js         # PostCSS 설정
+├── package.json              # 패키지 정보
+├── vite.config.js            # Vite 설정
+└── README.md                 # 프로젝트 설명
+```
+
+### 세부 설명
+
+1. **`public/`**
+    - 정적 파일 저장소.
+    - 로고, favicon, SEO 관련 메타파일 (e.g., robots.txt)을 저장.
+2. **`src/components/`**
+    - **`common/`**: 공통으로 사용하는 컴포넌트들 (e.g., 버튼, 모달, QR코드 생성).
+    - **`layout/`**: 페이지 레이아웃 구성 요소 (e.g., 헤더, 푸터, 사이드바).
+3. **`src/pages/`**
+    - 주요 페이지 컴포넌트.
+    - `Home.jsx`: 메인 랜딩 페이지.
+    - `QRShuffle.jsx`: 랜덤 QR 셔플 기능 페이지.
+    - `EditCard.jsx`: 명함 수정 페이지.
+4. **`src/contexts/`**
+    - **`AuthContext`**: 사용자 인증 상태 관리.
+    - **`QRCodeContext`**: QR 코드 생성/관리 상태.
+    - **`ThemeContext`**: 다크 모드 등 테마 설정.
+5. **`src/services/`**
+    - 서버와 통신하는 API 로직을 캡슐화.
+    - `api.js`에서 Axios를 사용하여 호출을 통합 관리.
+6. **`src/styles/`**
+    - Tailwind CSS의 전역 스타일 정의 (`globals.css`).
+    - 필요 시 커스텀 스타일 추가 (`tailwind.css`).
+7. **`src/hooks/`**
+    - 재사용 가능한 커스텀 훅 저장소.
+    - e.g., `useAuth`, `useQRCode` 등.
+8. **`App.jsx`**
+    - 라우팅 및 전역 레이아웃 정의.
+    - React Router를 사용하여 페이지 구성.
+9. **환경 변수 설정 (`.env`)**
+    - Firebase 설정 및 API URL 저장.
+
+### 기본 의존성 패키지
+
+1. **필수**
+    
+    ```bash
+    npm install react-router-dom axios firebase
+    ```
+    
+2. **Tailwind CSS 설치**
+    
+    ```bash
+    npm install -D tailwindcss postcss autoprefixer
+    npx tailwindcss init
+    ```
+    
+3. **추가 유틸리티**
+    - `react-icons`: 아이콘 사용.
+    - `clsx`: 조건부 클래스 관리.
+    - `qrcode.react`: QR 코드 생성.
 
 ## 개발 계획 🤸‍♀️
 
