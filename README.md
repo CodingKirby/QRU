@@ -144,33 +144,33 @@ QRU/
 │   │   └── logo.svg
 │   ├── components/           # 재사용 가능한 UI 컴포넌트
 │   │   ├── common/           # 공통 컴포넌트 (버튼, 모달 등)
-│   │   │   ├── Button.jsx
-│   │   │   ├── Modal.jsx
-│   │   │   └── QRCode.jsx
+│   │   │   ├── Button.tsx
+│   │   │   ├── Modal.tsx
+│   │   │   └── QRCode.tsx
 │   │   ├── layout/           # 레이아웃 관련 컴포넌트
-│   │   │   ├── Header.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   └── Sidebar.jsx
-│   │   └── Logo.jsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   └── Sidebar.tsx
+│   │   └── Logo.tsx
 │   ├── contexts/             # Context API (전역 상태 관리)
-│   │   ├── AuthContext.jsx
-│   │   ├── ThemeContext.jsx
-│   │   └── QRCodeContext.jsx
+│   │   ├── AuthContext.tsx
+│   │   ├── ThemeContext.tsx
+│   │   └── QRCodeContext.tsx
 │   ├── hooks/                # 커스텀 훅
 │   │   └── useAuth.js
 │   ├── pages/                # 라우트 페이지
-│   │   ├── Home.jsx
-│   │   ├── About.jsx
-│   │   ├── Profile.jsx
-│   │   ├── QRShuffle.jsx
-│   │   └── EditCard.jsx
+│   │   ├── Home.tsx
+│   │   ├── About.tsx
+│   │   ├── Profile.tsx
+│   │   ├── QRShuffle.tsx
+│   │   └── EditCard.tsx
 │   ├── services/             # API 호출 로직
 │   │   └── api.js
 │   ├── styles/               # 전역 스타일 및 Tailwind 설정
 │   │   ├── globals.css
 │   │   └── tailwind.css
-│   ├── App.jsx               # 주요 컴포넌트
-│   ├── main.jsx              # 엔트리 포인트
+│   ├── App.tsx               # 주요 컴포넌트
+│   ├── main.tsx              # 엔트리 포인트
 │   └── vite-env.d.ts         # Vite 환경 변수 타입
 ├── .env                      # 환경 변수
 ├── tailwind.config.js        # Tailwind 설정
@@ -191,9 +191,9 @@ QRU/
     - **`layout/`**: 페이지 레이아웃 구성 요소 (e.g., 헤더, 푸터, 사이드바).
 3. **`src/pages/`**
     - 주요 페이지 컴포넌트.
-    - `Home.jsx`: 메인 랜딩 페이지.
-    - `QRShuffle.jsx`: 랜덤 QR 셔플 기능 페이지.
-    - `EditCard.jsx`: 명함 수정 페이지.
+    - `Home.tsx`: 메인 랜딩 페이지.
+    - `QRShuffle.tsx`: 랜덤 QR 셔플 기능 페이지.
+    - `EditCard.tsx`: 명함 수정 페이지.
 4. **`src/contexts/`**
     - **`AuthContext`**: 사용자 인증 상태 관리.
     - **`QRCodeContext`**: QR 코드 생성/관리 상태.
@@ -207,7 +207,7 @@ QRU/
 7. **`src/hooks/`**
     - 재사용 가능한 커스텀 훅 저장소.
     - e.g., `useAuth`, `useQRCode` 등.
-8. **`App.jsx`**
+8. **`App.tsx`**
     - 라우팅 및 전역 레이아웃 정의.
     - React Router를 사용하여 페이지 구성.
 9. **환경 변수 설정 (`.env`)**
