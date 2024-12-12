@@ -1,5 +1,5 @@
 import React from 'react';
-import QRULogo from '../components/common/QRULogo';
+import QRULogoCard from '../components/home/QRULogoCard';
 import Button from '../components/common/Button';
 import { FaPlus } from 'react-icons/fa';
 import styled from 'styled-components';
@@ -12,11 +12,11 @@ const Home: React.FC = () => {
 	return (
 		<HomeStyle>
 			<div className="home-container">
-				<QRULogo>
+				<QRULogoCard>
 					<Button onClick={handleCreateCard} icon={<FaPlus />}>
 						나만의 명함 만들러 가기
 					</Button>
-				</QRULogo>
+				</QRULogoCard>
 			</div>
 		</HomeStyle>
 	);

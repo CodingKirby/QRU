@@ -6,15 +6,15 @@
   height="70"
 >
   <!-- Background squares -->
-  <rect x="0" y="0" width="20" height="20" fill="#4db6ac" rx="4"></rect>
   <rect x="25" y="0" width="20" height="20" fill="#4db6ac" rx="4"></rect>
-  <rect x="0" y="25" width="20" height="20" fill="#4db6ac" rx="4"></rect>
+  <rect x="50" y="0" width="20" height="20" fill="#4db6ac" rx="4"></rect>
   <rect x="25" y="25" width="20" height="20" fill="#4db6ac" rx="4"></rect>
-  <rect x="0" y="50" width="20" height="20" fill="#4db6ac" rx="4"></rect>
+  <rect x="50" y="25" width="20" height="20" fill="#4db6ac" rx="4"></rect>
+  <rect x="50" y="50" width="20" height="20" fill="#4db6ac" rx="4"></rect>
 
   <!-- Empty squares -->
-  <rect x="50" y="0" width="20" height="20" fill="#e0f7fa" rx="4"></rect>
-  <rect x="50" y="25" width="20" height="20" fill="#e0f7fa" rx="4"></rect>
+  <rect x="0" y="0" width="20" height="20" fill="#e0f7fa" rx="4"></rect>
+  <rect x="0" y="25" width="20" height="20" fill="#e0f7fa" rx="4"></rect>
+  <rect x="0" y="50" width="20" height="20" fill="#e0f7fa" rx="4"></rect>
   <rect x="25" y="50" width="20" height="20" fill="#e0f7fa" rx="4"></rect>
-  <rect x="50" y="50" width="20" height="20" fill="#e0f7fa" rx="4"></rect>
 </svg>

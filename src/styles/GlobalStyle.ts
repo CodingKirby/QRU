@@ -1,6 +1,12 @@
 import { createGlobalStyle } from 'styled-components';
+import 'sanitize.css';
+import { ThemeName } from './theme';
 
-export const GlobalStyle = createGlobalStyle`
+interface Props {
+	themeName: ThemeName;
+}
+
+export const GlobalStyle = createGlobalStyle<Props>`
   body {
     margin: 0;
     padding: 0;
@@ -9,13 +15,12 @@ export const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.color.text};
     transition: background-color 0.3s ease, color 0.3s ease;
   }
-
+  
   a {
-    color: ${({ theme }) => theme.color.primary};
     text-decoration: none;
-
+    
     &:hover {
-      text-decoration: underline;
+      color: ${({ theme }) => theme.color.third};
     }
   }
 `;
