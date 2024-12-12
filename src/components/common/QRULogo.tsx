@@ -90,14 +90,14 @@ const QRBox = styled.div`
 		height: 100%;
 		background: #e0f7fa;
 		border-radius: 30%;
-		box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.2), inset 0 -0.3vw 0.6vw rgba(0, 0, 0, 0.2);
+		box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.2), inset 0.3vw -0.3vw 0.6vw rgba(0, 0, 0, 0.3);
 		transition: transform 0.3s ease, box-shadow 0.3s ease;
 		will-change: transform, box-shadow;
 	}
 
 	.filled {
 		background: #4db6ac;
-		box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.5), inset 0 -0.3vw 0.6vw rgba(0, 0, 0, 0.3);
+		box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.5), inset 0.3vw -0.3vw 0.6vw rgba(0, 0, 0, 0.4);
 		transform: rotateX(-5deg) rotateY(5deg);
 	}
 
