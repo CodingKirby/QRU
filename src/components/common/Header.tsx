@@ -25,7 +25,6 @@ const Header = () => {
 		setIsDropdownOpen((prev) => !prev);
 	};
 
-	// Close drawer when clicking outside
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (
@@ -44,7 +43,6 @@ const Header = () => {
 		};
 	}, []);
 
-	// Close drawer when window size changes
 	useEffect(() => {
 		const handleResize = () => {
 			if (window.innerWidth > 768) {
