@@ -49,7 +49,7 @@ const FooterLink = styled.a`
 	font-size: 0.9rem;
 
 	&:hover {
-		color: ${({ theme }) => theme.color.third};
+		color: ${({ theme }) => theme.color.onText};
 	}
 `;
 
@@ -62,6 +62,10 @@ const SocialIcon = styled.a`
 	color: white;
 	font-size: 1.5rem;
 	transition: color 0.3s;
+
+	&:hover {
+		color: ${({ theme }) => theme.color.onText};
+	}
 `;
 
 const Copyright = styled.div`
