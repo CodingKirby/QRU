@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ThemeContext } from '../../context/themeContext';
-import { MdLightMode, MdDarkMode, MdMenu, MdClose } from 'react-icons/md';
+import { MdLightMode, MdDarkMode } from 'react-icons/md';
 import QRULogo from '../common/Logo';
+import Drawer from './Drawer';
 
 const Header = () => {
 	const { toggleTheme, themeName } = useContext(ThemeContext);
@@ -24,7 +25,9 @@ const Header = () => {
 	return (
 		<HeaderContainer>
 			<LeftContainer>
-				<HamburgerMenu onClick={toggleMenu}>{isMenuOpen ? <MdClose /> : <MdMenu />}</HamburgerMenu>
+				<DrawerContainer>
+					<Drawer isOpen={isMenuOpen} onClick={toggleMenu} />
+				</DrawerContainer>
 				<QRULogo />
 				<NavMenu>
 					<NavItem onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
@@ -75,6 +78,17 @@ const LeftContainer = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 1rem;
+`;
+
+const DrawerContainer = styled.div`
+	display: none; /* 기본 상태에서는 숨김 */
+
+	@media (max-width: 768px) {
+		display: flex; /* Flexbox를 사용하여 중앙 정렬 */
+		align-items: center; /* 수직 중앙 정렬 */
+		justify-content: center; /* 수평 중앙 정렬 */
+		height: 100%; /* 부모(Header)의 높이를 기준으로 정렬 */
+	}
 `;
 
 const NavMenu = styled.nav`
@@ -133,16 +147,6 @@ const DropdownItem = styled.div`
 		color: ${({ theme }) => theme.color.text};
 		background-color: ${({ theme }) => theme.color.blur};
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 2px -4px 6px rgba(0, 0, 0, 0.1);
-	}
-`;
-
-const HamburgerMenu = styled.div`
-	display: none;
-	font-size: 1.5rem;
-	cursor: pointer;
-
-	@media (max-width: 768px) {
-		display: block;
 	}
 `;
 
