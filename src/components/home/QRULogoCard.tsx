@@ -118,7 +118,7 @@ const TextBox = styled.div`
 const LogoText = styled.div`
 	font-size: 3vw;
 	font-weight: bolder;
-	color: ${({ theme }) => theme.color.highlightText};
+	color: ${({ theme }) => theme.color.primary};
 	text-shadow: -0.4vw 0.2vw 0.2vw rgba(0, 0, 0, 0.2);
 	transition: text-shadow 0.3s ease;
 `;
