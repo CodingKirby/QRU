@@ -27,7 +27,7 @@ const StyledDrawer = styled.div<{ isOpen: boolean }>`
 		position: absolute;
 		width: 100%;
 		height: 0.2rem;
-		background: #fff;
+		background: ${({ theme }) => theme.color.text};
 		left: 0;
 		border-radius: 0.2rem;
 		transition: all 0.3s ease;
