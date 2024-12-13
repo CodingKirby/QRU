@@ -129,10 +129,10 @@ export const darkTheme: Theme = {
 	...lightTheme,
 	name: 'light',
 	color: {
-		primary: '#4db6ac',
-		primaryVariant: '#2b2b2b',
+		primary: '#00867d',
+		primaryVariant: '#4db6ac',
 		secondary: '#3a5663',
-		secondaryVariant: '#2B3033',
+		secondaryVariant: '#213C48',
 		background: 'linear-gradient(135deg, #3a5663, #65474c)',
 		surface: '#2b2b2b',
 		error: '#cf6679',

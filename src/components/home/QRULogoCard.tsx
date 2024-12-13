@@ -96,7 +96,7 @@ const QRBox = styled.div`
 	}
 
 	.filled {
-		background: #4db6ac;
+		background: ${({ theme }) => theme.color.primary};
 		box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.5), inset 0.3vw -0.3vw 0.6vw rgba(0, 0, 0, 0.4);
 		transform: rotateX(-5deg) rotateY(5deg);
 	}
