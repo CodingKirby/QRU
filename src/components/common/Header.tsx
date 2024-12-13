@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { ThemeContext } from '../../context/themeContext';
 import { MdLightMode, MdDarkMode } from 'react-icons/md';
@@ -9,6 +9,9 @@ const Header = () => {
 	const { toggleTheme, themeName } = useContext(ThemeContext);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+	const dropdownRef = useRef<HTMLDivElement | null>(null);
+	const drawerRef = useRef<HTMLDivElement | null>(null);
 
 	const handleLoginLogout = () => {
 		alert('로그인/로그아웃 클릭!');
@@ -22,15 +25,48 @@ const Header = () => {
 		setIsDropdownOpen((prev) => !prev);
 	};
 
+	// Close drawer when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				dropdownRef.current &&
+				!dropdownRef.current.contains(event.target as Node) &&
+				drawerRef.current &&
+				!drawerRef.current.contains(event.target as Node)
+			) {
+				setIsMenuOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
+
+	// Close drawer when window size changes
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth > 768) {
+				setIsMenuOpen(false);
+			}
+		};
+
+		window.addEventListener('resize', handleResize);
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
+
 	return (
 		<HeaderContainer>
 			<LeftContainer>
-				<DrawerContainer>
+				<DrawerContainer ref={drawerRef}>
 					<Drawer isOpen={isMenuOpen} onClick={toggleMenu} />
 				</DrawerContainer>
 				<QRULogo />
 				<NavMenu>
-					<NavItem onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+					<NavItem onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown} ref={dropdownRef}>
 						어떤 서비스인가요?
 						{isDropdownOpen && (
 							<DropdownMenu>
@@ -75,7 +111,7 @@ const HeaderContainer = styled.header`
 const LeftContainer = styled.div`
 	display: flex;
 	align-items: center;
-	gap: 1rem;
+	gap: 1.2rem;
 `;
 
 const DrawerContainer = styled.div`
@@ -111,6 +147,8 @@ const AnimatedMobileNavMenu = styled.nav`
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	transform-origin: top;
 	transition: transform 0.3s ease, opacity 0.3s ease;
+	border-radius: 0 0 2rem 2rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 -4px 10px rgba(0, 0, 0, 0.3);
 
 	&.open {
 		transform: scaleY(1);
