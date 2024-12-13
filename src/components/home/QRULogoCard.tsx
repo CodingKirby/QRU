@@ -40,7 +40,7 @@ const LogoCard = styled.div`
 	max-height: 50vh;
 	min-width: 30vw;
 	aspect-ratio: 16 / 9;
-	background: ${({ theme }) => theme.color.textBackground};
+	background: ${({ theme }) => theme.color.surface};
 	border-radius: 2vw;
 	box-shadow: 0 0.8vw 2vw rgba(0, 0, 0, 0.4), inset 0 -0.4vw 0.8vw rgba(0, 0, 0, 0.2);
 	position: relative;
@@ -118,7 +118,7 @@ const TextBox = styled.div`
 const LogoText = styled.div`
 	font-size: 3vw;
 	font-weight: bolder;
-	color: #00897b;
+	color: ${({ theme }) => theme.color.highlightText};
 	text-shadow: -0.4vw 0.2vw 0.2vw rgba(0, 0, 0, 0.2);
 	transition: text-shadow 0.3s ease;
 `;
