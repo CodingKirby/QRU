@@ -1,15 +1,21 @@
 export type ThemeName = 'light' | 'dark';
 
 export type ColorKey =
-	| 'primary'
-	| 'secondary'
-	| 'third'
-	| 'point'
-	| 'background'
-	| 'blur'
-	| 'border'
-	| 'text'
-	| 'textBackground';
+	| 'primary' // 주 색상
+	| 'primaryVariant' // 주 색상 변형
+	| 'secondary' // 보조 색상
+	| 'secondaryVariant' // 보조 색상 변형
+	| 'background' // 배경 색상
+	| 'surface' // 표면 색상 ex) 카드, 버튼
+	| 'error' // 오류 색상
+	| 'onPrimary' // 주 색상 위의 텍스트 색상
+	| 'onSecondary' // 보조 색상 위의 텍스트 색상
+	| 'onBackground' // 배경 색상 위의 텍스트 색상
+	| 'onSurface' // 표면 색상 위의 텍스트 색상
+	| 'onError' // 오류 색상 위의 텍스트 색상
+	| 'blur' // 흐린 색상
+	| 'text' // 텍스트 색상
+	| 'onText'; // 텍스트 위의 색상
 export type HeadingSize = 'large' | 'medium' | 'small';
 export type ButtonSize = 'large' | 'medium' | 'small';
 export type ButtonScheme = 'primary' | 'normal';
@@ -52,14 +58,20 @@ export const lightTheme: Theme = {
 	name: 'dark',
 	color: {
 		primary: '#4db6ac',
+		primaryVariant: '#00867d',
 		secondary: '#e0f7fa',
-		third: '#a8edea',
-		point: '#fed6e3',
+		secondaryVariant: '#a8edea',
 		background: 'linear-gradient(135deg, #a8edea, #fed6e3)',
+		surface: '#ffffff',
+		error: '#b00020',
+		onPrimary: '#ffffff',
+		onSecondary: '#213C48',
+		onBackground: '#000000',
+		onSurface: '#000000',
+		onError: '#ffffff',
 		blur: 'rgba(255, 255, 255, 0.1)',
 		text: '#213C48',
-		textBackground: '#ffffff',
-		border: '#f2f2f2',
+		onText: '#e0f7fa',
 	},
 	heading: {
 		large: {
@@ -118,14 +130,20 @@ export const darkTheme: Theme = {
 	name: 'light',
 	color: {
 		primary: '#141414',
-		secondary: '#e8e8e8',
-		third: '#2b2b2b',
-		point: '#4db6ac',
+		primaryVariant: '#2b2b2b',
+		secondary: '#3a5663',
+		secondaryVariant: '#2B3033',
 		background: 'linear-gradient(135deg, #3a5663, #65474c)',
+		surface: '#2b2b2b',
+		error: '#cf6679',
+		onPrimary: '#4db6ac',
+		onSecondary: '#ffffff',
+		onBackground: '#ffffff',
+		onSurface: '#ffffff',
+		onError: '#ffffff',
 		blur: 'rgba(1, 1, 1, 0.1)',
-		text: '#f2f2f2',
-		textBackground: '#2b2b2b',
-		border: '#757575',
+		text: '#e8e8e8',
+		onText: '#000000',
 	},
 	buttonScheme: {
 		primary: {
