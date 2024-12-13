@@ -23,4 +23,8 @@ export const GlobalStyle = createGlobalStyle<Props>`
       color: ${({ theme }) => theme.color.third};
     }
   }
+
+  * {
+    user-select: none;
+  }
 `;
