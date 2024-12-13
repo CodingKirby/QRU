@@ -1,117 +1,174 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ThemeContext } from '../../context/themeContext';
-import { MdLightMode, MdDarkMode } from 'react-icons/md';
+import { MdLightMode, MdDarkMode, MdMenu, MdClose } from 'react-icons/md';
 import QRULogo from '../common/Logo';
 
 const Header = () => {
 	const { toggleTheme, themeName } = useContext(ThemeContext);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	const handleLoginLogout = () => {
 		alert('로그인/로그아웃 클릭!');
 	};
 
+	const toggleMenu = () => {
+		setIsMenuOpen((prev) => !prev);
+	};
+
+	const toggleDropdown = () => {
+		setIsDropdownOpen((prev) => !prev);
+	};
+
 	return (
 		<HeaderContainer>
-			<NavMenu>
-				<NavItem>
-					<QRULogo />
-				</NavItem>
-				<NavItem>
-					어떤 서비스인가요
-					<Dropdown>
-						<DropdownItem>왜 만들었나요</DropdownItem>
-						<DropdownItem>어떻게 사용하나요</DropdownItem>
-						<DropdownItem>누가 만들었나요</DropdownItem>
-					</Dropdown>
-				</NavItem>
-				<NavItem>친구 찾기</NavItem>
-			</NavMenu>
-			<ButtonContainer>
-				<LoginButton onClick={handleLoginLogout}>로그인</LoginButton>
-				<LoginButton onClick={handleLoginLogout}>회원가입</LoginButton>
+			<LeftContainer>
+				<HamburgerMenu onClick={toggleMenu}>{isMenuOpen ? <MdClose /> : <MdMenu />}</HamburgerMenu>
+				<QRULogo />
+				<NavMenu>
+					<NavItem onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+						어떤 서비스인가요?
+						{isDropdownOpen && (
+							<DropdownMenu>
+								<DropdownItem>서비스 소개</DropdownItem>
+								<DropdownItem>이용 방법</DropdownItem>
+							</DropdownMenu>
+						)}
+					</NavItem>
+					<NavItem>친구찾기</NavItem>
+				</NavMenu>
+			</LeftContainer>
+			<RightContainer>
+				<ButtonContainer>
+					<LoginButton onClick={handleLoginLogout}>로그인</LoginButton>
+					<LoginButton onClick={handleLoginLogout}>회원가입</LoginButton>
+				</ButtonContainer>
 				<ToggleThemeButton onClick={toggleTheme}>
 					{themeName === 'light' ? <StyledIcon as={MdLightMode} /> : <StyledIcon as={MdDarkMode} />}
 				</ToggleThemeButton>
-			</ButtonContainer>
+			</RightContainer>
+			{isMenuOpen && (
+				<MobileNavMenu>
+					<LoginButton onClick={handleLoginLogout}>로그인</LoginButton>
+					<LoginButton onClick={handleLoginLogout}>회원가입</LoginButton>
+					<NavItem>어떤 서비스인가요?</NavItem>
+					<NavItem>친구찾기</NavItem>
+				</MobileNavMenu>
+			)}
 		</HeaderContainer>
 	);
 };
 
 const HeaderContainer = styled.header`
-	height: 60px;
-	background-color: ${({ theme }) => theme.color.blur};
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	height: 60px;
+	background-color: ${({ theme }) => theme.color.blur};
 	padding: 0.2rem 1.2rem;
 	color: ${({ theme }) => theme.color.text};
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 -4px 10px rgba(0, 0, 0, 0.1);
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+`;
+
+const LeftContainer = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 1rem;
 `;
 
 const NavMenu = styled.nav`
 	display: flex;
 	gap: 1rem;
-	position: relative;
+
+	@media (max-width: 768px) {
+		display: none;
+	}
 `;
 
-const NavItem = styled.div`
-	position: relative;
-	padding: 0.5rem;
-	cursor: pointer;
-	font-size: 1rem;
+const MobileNavMenu = styled.nav`
+	display: none;
+	flex-direction: column;
+	gap: 0.5rem;
+	position: absolute;
+	left: 0;
+	top: 60px;
+	background-color: ${({ theme }) => theme.color.blur};
+	width: 100%;
+	padding: 1rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-	&:hover {
-		color: ${({ theme }) => theme.color.secondary};
-	}
-
-	&:hover > div {
+	@media (max-width: 768px) {
 		display: flex;
 	}
 `;
 
-const Dropdown = styled.div`
-	display: none;
-	flex-direction: column;
-	position: absolute;
-	top: 100%;
-	left: 0;
-	color: ${({ theme }) => theme.color.third};
-	background-color: white;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	text-shadow: none;
-	border-radius: ${({ theme }) => theme.borderRadius.default};
-	overflow: hidden;
+const NavItem = styled.div`
+	padding: 0.5rem;
+	cursor: pointer;
+	font-size: 1rem;
+	position: relative;
 
-	& > div {
-		padding: 0.5rem 1rem;
-		cursor: pointer;
-
-		&:hover {
-			background-color: ${({ theme }) => theme.color.secondary};
-		}
+	&:hover {
+		color: ${({ theme }) => theme.color.onText};
 	}
 `;
 
+const DropdownMenu = styled.div`
+	position: absolute;
+	top: 100%;
+	left: 0;
+	background-color: ${({ theme }) => theme.color.blur};
+	padding: 0.5rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: ${({ theme }) => theme.borderRadius.default};
+`;
+
 const DropdownItem = styled.div`
-	font-size: 0.9rem;
-	color: ${({ theme }) => theme.color.primary};
+	padding: 0.5rem;
+	border-radius: ${({ theme }) => theme.borderRadius.default};
+	cursor: pointer;
+
+	&:hover {
+		color: ${({ theme }) => theme.color.text};
+		background-color: ${({ theme }) => theme.color.blur};
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 2px -4px 6px rgba(0, 0, 0, 0.1);
+	}
+`;
+
+const HamburgerMenu = styled.div`
+	display: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+
+	@media (max-width: 768px) {
+		display: block;
+	}
+`;
+
+const RightContainer = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 1rem;
 `;
 
 const ButtonContainer = styled.div`
 	display: flex;
 	gap: 0.5rem;
+	align-items: center;
 
-	max-height: 100%;
+	@media (max-width: 768px) {
+		display: none;
+	}
 `;
 
 const LoginButton = styled.button`
+	height: 2.5rem;
 	width: auto;
 	max-width: 8rem;
 	margin: 0.3rem;
 
-	background-color: ${({ theme }) => theme.color.third};
+	background-color: ${({ theme }) => theme.color.secondary};
 	color: ${({ theme }) => theme.color.text};
 	border: none;
 	border-radius: ${({ theme }) => theme.borderRadius.default};
@@ -125,31 +182,38 @@ const LoginButton = styled.button`
 	text-overflow: ellipsis;
 
 	&:hover {
-		background-color: ${({ theme }) => theme.color.third};
+		background-color: ${({ theme }) => theme.color.blur};
 	}
 `;
 
 const ToggleThemeButton = styled.button`
-	margin: 0.3rem;
+	height: 2.5rem;
 	aspect-ratio: 1 / 1;
-	background-color: ${({ theme }) => theme.color.third};
+	background-color: transparent;
 	color: ${({ theme }) => theme.color.text};
 	border: none;
 	border-radius: ${({ theme }) => theme.borderRadius.default};
 	padding: 0.5rem 1rem;
 	cursor: pointer;
 	font-size: 1rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 2px -4px 6px rgba(0, 0, 0, 0.3);
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
 	&:hover {
-		background-color: ${({ theme }) => theme.color.third};
+		background-color: ${({ theme }) => theme.color.blur};
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 2px -4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	@media (max-width: 768px) {
+		position: absolute;
+		right: 1rem;
 	}
 `;
 
 const StyledIcon = styled(MdLightMode)`
-	font-size: 1.5rem; /* 아이콘 크기 조절 */
-	color: ${({ theme }) => theme.color.text}; /* 테마 색상 반영 */
+	font-size: 1.5rem;
+	color: ${({ theme }) => theme.color.text};
 `;
 
 export default Header;
