@@ -12,11 +12,11 @@
   </defs>
 
   <!-- Background squares -->
-  <rect x="25" y="0" width="20" height="20" fill="#4db6ac" rx="8" filter="url(#boxShadow)"></rect>
-  <rect x="50" y="0" width="20" height="20" fill="#4db6ac" rx="8" filter="url(#boxShadow)"></rect>
-  <rect x="25" y="25" width="20" height="20" fill="#4db6ac" rx="8" filter="url(#boxShadow)"></rect>
-  <rect x="50" y="25" width="20" height="20" fill="#4db6ac" rx="8" filter="url(#boxShadow)"></rect>
-  <rect x="50" y="50" width="20" height="20" fill="#4db6ac" rx="8" filter="url(#boxShadow)"></rect>
+  <rect x="25" y="0" width="20" height="20" fill="current" rx="8" filter="url(#boxShadow)"></rect>
+  <rect x="50" y="0" width="20" height="20" fill="current" rx="8" filter="url(#boxShadow)"></rect>
+  <rect x="25" y="25" width="20" height="20" fill="current" rx="8" filter="url(#boxShadow)"></rect>
+  <rect x="50" y="25" width="20" height="20" fill="current" rx="8" filter="url(#boxShadow)"></rect>
+  <rect x="50" y="50" width="20" height="20" fill="current" rx="8" filter="url(#boxShadow)"></rect>
 
   <!-- Empty squares -->
   <rect x="0" y="0" width="20" height="20" fill="#e0f7fa" rx="8" filter="url(#boxShadow)"></rect>

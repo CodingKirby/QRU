@@ -3,12 +3,13 @@ import Logo from '../../assets/logo.svg?react';
 
 interface StyledLogoProps {
 	size?: string;
+	color?: string;
 }
 
-const QRULogo = ({ size = '1.5rem' }: StyledLogoProps) => {
+const QRULogo = ({ size = '1.5rem', color }: StyledLogoProps) => {
 	return (
 		<LogoWrapper>
-			<StyledLogo size={size} />
+			<StyledLogo size={size} fill={color} />
 			QRU
 		</LogoWrapper>
 	);
@@ -35,6 +36,7 @@ const LogoWrapper = styled.div`
 const StyledLogo = styled(Logo)<StyledLogoProps>`
 	width: ${({ size }) => size};
 	height: ${({ size }) => size};
+	fill: ${({ theme }) => theme.color.primary};
 	transition: transform 0.3s ease, fill 0.3s ease;
 	overflow: visible;
 `;
