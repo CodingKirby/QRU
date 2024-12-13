@@ -51,14 +51,12 @@ const Header = () => {
 					{themeName === 'light' ? <StyledIcon as={MdLightMode} /> : <StyledIcon as={MdDarkMode} />}
 				</ToggleThemeButton>
 			</RightContainer>
-			{isMenuOpen && (
-				<MobileNavMenu>
-					<LoginButton onClick={handleLoginLogout}>로그인</LoginButton>
-					<LoginButton onClick={handleLoginLogout}>회원가입</LoginButton>
-					<NavItem>어떤 서비스인가요?</NavItem>
-					<NavItem>친구찾기</NavItem>
-				</MobileNavMenu>
-			)}
+			<AnimatedMobileNavMenu className={isMenuOpen ? 'open' : 'closed'}>
+				<LoginButton onClick={handleLoginLogout}>로그인</LoginButton>
+				<LoginButton onClick={handleLoginLogout}>회원가입</LoginButton>
+				<NavItem>어떤 서비스인가요?</NavItem>
+				<NavItem>친구찾기</NavItem>
+			</AnimatedMobileNavMenu>
 		</HeaderContainer>
 	);
 };
@@ -67,7 +65,7 @@ const HeaderContainer = styled.header`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	height: 60px;
+	height: 3.5rem;
 	background-color: ${({ theme }) => theme.color.blur};
 	padding: 0.2rem 1.2rem;
 	color: ${({ theme }) => theme.color.text};
@@ -81,13 +79,13 @@ const LeftContainer = styled.div`
 `;
 
 const DrawerContainer = styled.div`
-	display: none; /* 기본 상태에서는 숨김 */
+	display: none;
 
 	@media (max-width: 768px) {
-		display: flex; /* Flexbox를 사용하여 중앙 정렬 */
-		align-items: center; /* 수직 중앙 정렬 */
-		justify-content: center; /* 수평 중앙 정렬 */
-		height: 100%; /* 부모(Header)의 높이를 기준으로 정렬 */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
 	}
 `;
 
@@ -100,20 +98,28 @@ const NavMenu = styled.nav`
 	}
 `;
 
-const MobileNavMenu = styled.nav`
-	display: none;
+const AnimatedMobileNavMenu = styled.nav`
+	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
 	position: absolute;
 	left: 0;
-	top: 60px;
+	top: 3.5rem;
 	background-color: ${({ theme }) => theme.color.blur};
 	width: 100%;
 	padding: 1rem;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	transform-origin: top;
+	transition: transform 0.3s ease, opacity 0.3s ease;
 
-	@media (max-width: 768px) {
-		display: flex;
+	&.open {
+		transform: scaleY(1);
+		opacity: 1;
+	}
+
+	&.closed {
+		transform: scaleY(0);
+		opacity: 0;
 	}
 `;
 
