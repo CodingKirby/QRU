@@ -214,7 +214,7 @@ const LoginButton = styled.button`
 	max-width: 8rem;
 	margin: 0.3rem;
 
-	background-color: ${({ theme }) => theme.color.secondary};
+	background: ${({ theme }) => theme.color.secondary};
 	color: ${({ theme }) => theme.color.text};
 	border: none;
 	border-radius: ${({ theme }) => theme.borderRadius.default};
@@ -228,14 +228,14 @@ const LoginButton = styled.button`
 	text-overflow: ellipsis;
 
 	&:hover {
-		background-color: ${({ theme }) => theme.color.blur};
+		background: ${({ theme }) => theme.color.blur};
 	}
 `;
 
 const ToggleThemeButton = styled.button`
 	height: 2.5rem;
 	aspect-ratio: 1 / 1;
-	background-color: transparent;
+	background: transparent;
 	color: ${({ theme }) => theme.color.text};
 	border: none;
 	border-radius: ${({ theme }) => theme.borderRadius.default};
