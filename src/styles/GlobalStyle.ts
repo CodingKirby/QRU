@@ -12,15 +12,10 @@ export const GlobalStyle = createGlobalStyle<Props>`
     padding: 0;
     background: ${({ theme }) => theme.color.background};
     color: ${({ theme }) => theme.color.text};
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   a {
     text-decoration: none;
-    
-    &:hover {
-      color: ${({ theme }) => theme.color.third};
-    }
   }
 
   * {
