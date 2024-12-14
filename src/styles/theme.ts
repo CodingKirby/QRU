@@ -16,7 +16,8 @@ export type ColorKey =
 	| 'blur' // 흐린 색상
 	| 'text' // 텍스트 색상
 	| 'onText'; // 텍스트 위의 색상
-export type HeadingSize = 'large' | 'medium' | 'small';
+export type FontSize = 'extraLarge' | 'large' | 'medium' | 'small' | 'extraSmall';
+export type HeadingSize = 'extraLarge' | 'large' | 'medium' | 'small';
 export type ButtonSize = 'large' | 'medium' | 'small';
 export type ButtonScheme = 'primary' | 'normal';
 export type LayoutWidth = 'large' | 'medium' | 'small';
@@ -24,6 +25,7 @@ export type MediaQuery = 'mobile' | 'tablet' | 'desktop';
 interface Theme {
 	name: ThemeName;
 	color: Record<ColorKey, string>;
+	fontSize: Record<FontSize, string>;
 	heading: {
 		[key in HeadingSize]: {
 			fontSize: string;
@@ -33,6 +35,7 @@ interface Theme {
 		[key in ButtonSize]: {
 			fontSize: string;
 			padding: string;
+			gap?: string;
 		};
 	};
 	buttonScheme: {
@@ -66,14 +69,24 @@ export const lightTheme: Theme = {
 		error: '#b00020',
 		onPrimary: '#ffffff',
 		onSecondary: '#213C48',
-		onBackground: '#000000',
+		onBackground: '#ffffff',
 		onSurface: '#000000',
 		onError: '#ffffff',
-		blur: 'rgba(255, 255, 255, 0.1)',
+		blur: 'rgba(255, 255, 255, 0.15)',
 		text: '#213C48',
 		onText: '#e0f7fa',
 	},
+	fontSize: {
+		extraLarge: '3.5rem',
+		large: '2.5rem',
+		medium: '1.5rem',
+		small: '1rem',
+		extraSmall: '0.75rem',
+	},
 	heading: {
+		extraLarge: {
+			fontSize: '2.5rem',
+		},
 		large: {
 			fontSize: '2rem',
 		},
@@ -87,15 +100,18 @@ export const lightTheme: Theme = {
 	button: {
 		large: {
 			fontSize: '1.5rem',
-			padding: '1rem 2rem',
+			padding: '0.8rem 1.5rem',
+			gap: '1rem',
 		},
 		medium: {
 			fontSize: '1rem',
 			padding: '0.5rem 1rem',
+			gap: '0.5rem',
 		},
 		small: {
 			fontSize: '0.75rem',
 			padding: '0.25rem 0.5rem',
+			gap: '0.25rem',
 		},
 	},
 	buttonScheme: {
@@ -143,7 +159,7 @@ export const darkTheme: Theme = {
 		onError: '#ffffff',
 		blur: 'rgba(1, 1, 1, 0.1)',
 		text: '#e8e8e8',
-		onText: '#000000',
+		onText: '#00867d',
 	},
 	buttonScheme: {
 		primary: {
