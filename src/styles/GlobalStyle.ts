@@ -10,7 +10,6 @@ export const GlobalStyle = createGlobalStyle<Props>`
   body {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', 'Noto Sans KR', sans-serif;
     background: ${({ theme }) => theme.color.background};
     color: ${({ theme }) => theme.color.text};
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -25,6 +24,7 @@ export const GlobalStyle = createGlobalStyle<Props>`
   }
 
   * {
+    font-family: 'Poppins', 'Noto Sans KR', sans-serif;
     user-select: none;
   }
 `;
