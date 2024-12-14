@@ -1,39 +1,41 @@
-import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 
 interface LayoutProps {
-	children: ReactNode;
+	children: React.ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+function Layout({ children }: LayoutProps) {
 	return (
-		<Container>
+		<LayoutStyle>
 			<Header />
-			<Main>
-				<Content>{children}</Content>
-			</Main>
+			<Content>{children}</Content>
 			<Footer />
-		</Container>
+		</LayoutStyle>
 	);
-};
+}
 
-const Container = styled.div`
+const LayoutStyle = styled.div`
 	display: flex;
 	flex-direction: column;
-	height: 100%;
-`;
-
-const Main = styled.div`
-	display: flex;
-	flex: 1;
+	min-height: 100vh; /* 브라우저 창 전체를 채우기 */
 `;
 
 const Content = styled.main`
-	flex: 1;
-	padding: 1rem;
-	overflow-y: auto;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+
+	margin: 0 auto;
+	max-width: ${({ theme }) => theme.layout.width.large};
+	padding: 20px 0;
+
+	@media screen AND ${({ theme }) => theme.mediaQuery.mobile} {
+		padding: 20px 12px;
+	}
 `;
 
 export default Layout;

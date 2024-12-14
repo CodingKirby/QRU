@@ -1,76 +1,77 @@
-import React from 'react';
 import styled from 'styled-components';
 import { FaGithub } from 'react-icons/fa';
+import QRULogo from './Logo';
 
 const Footer = () => {
 	return (
-		<FooterContainer>
-			<Logo>QRU</Logo>
-			<FooterMenu>
-				<FooterLink href="#">About</FooterLink>
-				<FooterLink href="#">Privacy Policy</FooterLink>
-				<FooterLink href="#">Terms of Service</FooterLink>
-				<FooterLink href="#">Contact</FooterLink>
-			</FooterMenu>
-			<SocialIcons>
-				<SocialIcon href="https://github.com/CodingKirby/QRU" target="_blank" rel="noopener noreferrer">
+		<FooterStyle>
+			<QRULogo size="large" color="primary" />
+			<div className="footerMenu">
+				<a href="#">About</a>
+				<a href="#">Privacy Policy</a>
+				<a href="#">Terms of Service</a>
+				<a href="#">Contact</a>
+			</div>
+			<div className="socialIcons">
+				<a href="https://github.com/CodingKirby/QRU" target="_blank" rel="noopener noreferrer">
 					<FaGithub />
-				</SocialIcon>
-			</SocialIcons>
-			<Copyright>© 2024 QRU. All Rights Reserved.</Copyright>
-		</FooterContainer>
+				</a>
+			</div>
+			<p>© 2024 QRU. All Rights Reserved.</p>
+		</FooterStyle>
 	);
 };
 
-const FooterContainer = styled.footer`
-	background-color: ${({ theme }) => theme.color.blur};
+const FooterStyle = styled.footer`
+	width: 100%;
+	margin: 0 auto;
+	margin-top: auto;
+	background: ${({ theme }) => theme.color.blur};
+	color: ${({ theme }) => theme.color.onBackground};
 	padding: 1rem;
-	color: white;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 1rem;
+	gap: 0.5rem;
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-`;
+	justify-content: space-between;
 
-const Logo = styled.div`
-	font-size: 1.5rem;
-	font-weight: bold;
-`;
-
-const FooterMenu = styled.div`
-	display: flex;
-	gap: 1rem;
-`;
-
-const FooterLink = styled.a`
-	color: white;
-	text-decoration: none;
-	font-size: 0.9rem;
-
-	&:hover {
-		color: ${({ theme }) => theme.color.onText};
+	.footerMenu {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
 	}
-`;
 
-const SocialIcons = styled.div`
-	display: flex;
-	gap: 1rem;
-`;
+	.footerMenu a {
+		color: ${({ theme }) => theme.color.onBackground};
+		font-size: ${({ theme }) => theme.fontSize.small};
+		white-space: nowrap;
 
-const SocialIcon = styled.a`
-	color: white;
-	font-size: 1.5rem;
-	transition: color 0.3s;
-
-	&:hover {
-		color: ${({ theme }) => theme.color.onText};
+		&:hover {
+			color: ${({ theme }) => theme.color.onText};
+		}
 	}
-`;
 
-const Copyright = styled.div`
-	font-size: 0.8rem;
-	text-align: center;
+	.socialIcons {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.socialIcons a {
+		color: ${({ theme }) => theme.color.onBackground};
+		font-size: 1.5rem;
+		transition: color 0.3s;
+
+		&:hover {
+			color: ${({ theme }) => theme.color.onText};
+		}
+	}
+
+	p {
+		color: ${({ theme }) => theme.color.onBackground};
+		font-size: ${({ theme }) => theme.fontSize.samll};
+		text-align: center;
+	}
 `;
 
 export default Footer;

@@ -1,63 +1,81 @@
-import React from 'react';
 import styled from 'styled-components';
+import { ButtonScheme, ButtonSize } from '../../styles/theme';
 
-interface ButtonProps {
-	onClick?: () => void;
-	children?: React.ReactNode;
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+	children: React.ReactNode;
 	icon?: React.ReactNode;
-	className?: string;
+	size: ButtonSize;
+	scheme: ButtonScheme;
+	disabled?: boolean;
+	isLoading?: boolean;
+	hoverStyle?: string;
+	activeStyle?: string;
+	focusStyle?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ onClick, children, icon, className }) => {
+function Button({ children, icon, size, scheme, disabled, isLoading, ...props }: Props) {
 	return (
-		<StyledButton onClick={onClick} className={className}>
-			{icon && <ButtonIcon>{icon}</ButtonIcon>}
+		<ButtonStyle size={size} scheme={scheme} disabled={disabled} isLoading={isLoading} {...props}>
+			{icon && <div className="buttonIcon">{icon}</div>}
 			{children}
-		</StyledButton>
+		</ButtonStyle>
 	);
-};
+}
 
-export const StyledButton = styled.button`
+export const ButtonStyle = styled.button<Omit<Props, 'children'>>`
 	display: inline-flex;
+	width: 100%;
 	align-items: center;
 	justify-content: center;
-	gap: 5%;
-	padding: 5%;
-	font-size: 1.8vw;
-	font-weight: bold;
+	font-weight: bolder;
+
+	font-size: ${({ theme, size }) => theme.button[size].fontSize};
+	padding: ${({ theme, size }) => theme.button[size].padding};
+	gap: ${({ theme, size }) => theme.button[size].gap};
+
 	color: ${({ theme }) => theme.color.text};
 	background: ${({ theme }) => theme.color.primary};
 	border: none;
-	border-radius: 1vw;
-	cursor: pointer;
+	border-radius: ${({ theme }) => theme.borderRadius.default};
+
 	box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.2), inset 0 -0.4vw 0.6vw rgba(0, 0, 0, 0.3);
-	width: 100%;
-	height: auto;
+	opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+	pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+	cursor: ${({ disabled }) => (disabled ? 'none' : 'pointer')};
+
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	transition: transform 0.2s ease, box-shadow 0.2s ease; /* 부드러운 애니메이션 */
 	-webkit-tap-highlight-color: transparent; /* 모바일 터치 하이라이트 제거 */
 
+	.buttonIcon {
+		display: inline-flex;
+		align-items: center;
+		width: ${({ theme, size }) => theme.button[size].fontSize};
+	}
+
 	&:hover {
-		transform: translateY(-0.4vw);
-		box-shadow: -1vw 1vw 1.5vw rgba(0, 0, 0, 0.3), inset 0.4vw -0.6vw 0.4vw rgba(0, 0, 0, 0.3); /* hover 상태에서 더 강한 그림자 */
+		${({ hoverStyle }) => hoverStyle || ''}
 	}
 
 	&:active {
-		transform: translateY(0); /* 클릭 시 원래 위치 */
-		box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.2), inset 0 -0.4vw 0.4vw rgba(0, 0, 0, 0.3); /* 클릭 시 기본 상태로 */
+		${({ activeStyle }) => activeStyle || ''}
 	}
 
 	&:focus {
-		outline: none;
+		${({ focusStyle }) => focusStyle || ''}
 	}
-`;
 
-export const ButtonIcon = styled.span`
-	display: inline-flex;
-	align-items: center;
-	font-size: 2vw;
+	@media (max-width: 768px) {
+		font-size: ${({ theme }) => theme.button.medium.fontSize};
+		padding: ${({ theme }) => theme.button.medium.padding};
+		gap: ${({ theme }) => theme.button.medium.gap};
+
+		.buttonIcon {
+			width: ${({ theme }) => theme.button.medium.fontSize};
+		}
+	}
 `;
 
 export default Button;
