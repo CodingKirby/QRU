@@ -58,7 +58,7 @@ const LogoCard = styled.div`
 
 	aspect-ratio: 16 / 9;
 	background: ${({ theme }) => theme.color.surface};
-	border-radius: ${({ theme }) => theme.borderRadius.default};
+	border-radius: clamp(1rem, 2vw, 3rem);
 	box-shadow: ${({ theme }) => theme.shadow.strong};
 
 	position: relative;
@@ -70,19 +70,7 @@ const LogoCard = styled.div`
 	margin-top: clamp(2rem, 5vw, 5rem);
 	margin-bottom: clamp(2rem, 5vw, 5rem);
 	gap: 2rem;
-	will-change: transform, box-shadow;
-
-	&::before {
-		content: '';
-		position: absolute;
-		top: -10px;
-		bottom: -10px;
-		left: -10px;
-		right: -10px;
-		background: transparent; /* 투명 영역 */
-		border-radius: ${({ theme }) => theme.borderRadius.default};
-		z-index: -1;
-	}
+	will-change: transform, transform-style, box-shadow;
 
 	&:hover {
 		transform: rotateX(0deg) rotateY(0deg);
