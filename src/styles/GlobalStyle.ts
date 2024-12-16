@@ -13,7 +13,11 @@ export const GlobalStyle = createGlobalStyle<Props>`
     background: ${({ theme }) => theme.color.background};
     color: ${({ theme }) => theme.color.text};
   }
-  
+
+  h {
+    margin: 0;
+  }
+
   a {
     text-decoration: none;
   }

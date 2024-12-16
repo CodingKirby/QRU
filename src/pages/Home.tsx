@@ -4,16 +4,24 @@ import styled from 'styled-components';
 function Home() {
 	return (
 		<HomeStyle>
-			<QRULogoCard />
+			<section className="section">
+				<QRULogoCard />
+			</section>
 		</HomeStyle>
 	);
 }
 
 const HomeStyle = styled.div`
-	.home-container {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+
+	.section {
+		width: 100%;
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
+		justify-content: center;
+		align-items: center;
 	}
 `;
 
