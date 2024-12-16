@@ -1,21 +1,27 @@
-import styled from 'styled-components';
-import { ButtonScheme, ButtonSize } from '../../styles/theme';
+import styled, { CSSProp } from 'styled-components';
+import { ButtonScheme, ButtonSize, Shadow } from '../../styles/theme';
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children: React.ReactNode;
 	icon?: React.ReactNode;
-	size: ButtonSize;
-	scheme: ButtonScheme;
+	size?: ButtonSize;
+	scheme?: ButtonScheme;
+	boxShadow?: Shadow;
 	disabled?: boolean;
 	isLoading?: boolean;
-	hoverStyle?: string;
-	activeStyle?: string;
-	focusStyle?: string;
+	styles?: CSSProp;
 }
 
-function Button({ children, icon, size, scheme, disabled, isLoading, ...props }: Props) {
+function Button({ children, icon, size, scheme, boxShadow, disabled, isLoading, ...props }: Props) {
 	return (
-		<ButtonStyle size={size} scheme={scheme} disabled={disabled} isLoading={isLoading} {...props}>
+		<ButtonStyle
+			size={size}
+			scheme={scheme}
+			boxShadow={boxShadow}
+			disabled={disabled}
+			isLoading={isLoading}
+			{...props}
+		>
 			{icon && <div className="buttonIcon">{icon}</div>}
 			{children}
 		</ButtonStyle>
@@ -23,22 +29,23 @@ function Button({ children, icon, size, scheme, disabled, isLoading, ...props }:
 }
 
 export const ButtonStyle = styled.button<Omit<Props, 'children'>>`
-	display: inline-flex;
-	width: 100%;
+	min-height: 2.5rem;
+	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-weight: bolder;
+	line-height: 1;
 
-	font-size: ${({ theme, size }) => theme.button[size].fontSize};
-	padding: ${({ theme, size }) => theme.button[size].padding};
-	gap: ${({ theme, size }) => theme.button[size].gap};
+	font-size: ${({ theme, size }) => (size ? theme.button[size].fontSize : theme.button.medium.fontSize)};
+	padding: ${({ theme, size }) => (size ? theme.button[size].padding : theme.button.medium.padding)};
+	gap: ${({ theme, size }) => (size ? theme.button[size].gap : theme.button.medium.gap)};
 
-	color: ${({ theme }) => theme.color.text};
-	background: ${({ theme }) => theme.color.primary};
+	color: ${({ theme, scheme }) => (scheme ? theme.buttonScheme[scheme].color : theme.buttonScheme.default.color)};
+	background: ${({ theme, scheme }) =>
+		scheme ? theme.buttonScheme[scheme].backgroundColor : theme.buttonScheme.default.backgroundColor};
 	border: none;
 	border-radius: ${({ theme }) => theme.borderRadius.default};
-
-	box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.2), inset 0 -0.4vw 0.6vw rgba(0, 0, 0, 0.3);
+	box-shadow: ${({ theme, boxShadow }) => (boxShadow ? theme.shadow[boxShadow] : theme.shadow.default)};
 	opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 	pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
 	cursor: ${({ disabled }) => (disabled ? 'none' : 'pointer')};
@@ -46,36 +53,22 @@ export const ButtonStyle = styled.button<Omit<Props, 'children'>>`
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	transition: transform 0.2s ease, box-shadow 0.2s ease; /* 부드러운 애니메이션 */
+	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 	-webkit-tap-highlight-color: transparent; /* 모바일 터치 하이라이트 제거 */
 
 	.buttonIcon {
 		display: inline-flex;
 		align-items: center;
-		width: ${({ theme, size }) => theme.button[size].fontSize};
+		justify-content: center;
+		font-size: ${({ theme, size }) => (size ? theme.button[size].fontSize : theme.button.medium.fontSize)};
 	}
 
 	&:hover {
-		${({ hoverStyle }) => hoverStyle || ''}
+		background: ${({ theme }) => theme.color.blur};
+		box-shadow: ${({ theme }) => theme.shadow.default};
 	}
 
-	&:active {
-		${({ activeStyle }) => activeStyle || ''}
-	}
-
-	&:focus {
-		${({ focusStyle }) => focusStyle || ''}
-	}
-
-	@media (max-width: 768px) {
-		font-size: ${({ theme }) => theme.button.medium.fontSize};
-		padding: ${({ theme }) => theme.button.medium.padding};
-		gap: ${({ theme }) => theme.button.medium.gap};
-
-		.buttonIcon {
-			width: ${({ theme }) => theme.button.medium.fontSize};
-		}
-	}
+	${({ styles }) => styles || ''}
 `;
 
 export default Button;

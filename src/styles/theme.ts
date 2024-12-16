@@ -18,8 +18,9 @@ export type ColorKey =
 	| 'onText'; // 텍스트 위의 색상
 export type FontSize = 'extraLarge' | 'large' | 'medium' | 'small' | 'extraSmall';
 export type HeadingSize = 'extraLarge' | 'large' | 'medium' | 'small';
-export type ButtonSize = 'large' | 'medium' | 'small';
-export type ButtonScheme = 'primary' | 'normal';
+export type ButtonSize = 'extraLarge' | 'large' | 'medium' | 'small';
+export type ButtonScheme = 'primary' | 'secondary' | 'blur' | 'default';
+export type Shadow = 'default' | 'strong' | 'light' | 'hover' | 'none';
 export type LayoutWidth = 'large' | 'medium' | 'small';
 export type MediaQuery = 'mobile' | 'tablet' | 'desktop';
 interface Theme {
@@ -42,7 +43,11 @@ interface Theme {
 		[key in ButtonScheme]: {
 			color: string;
 			backgroundColor: string;
+			hover?: string;
 		};
+	};
+	shadow: {
+		[key in Shadow]: string;
 	};
 	borderRadius: {
 		default: string;
@@ -98,9 +103,14 @@ export const lightTheme: Theme = {
 		},
 	},
 	button: {
+		extraLarge: {
+			fontSize: '3rem',
+			padding: '1rem 2rem',
+			gap: '1.5rem',
+		},
 		large: {
 			fontSize: '1.5rem',
-			padding: '0.8rem 1.5rem',
+			padding: '1rem 1.5rem',
 			gap: '1rem',
 		},
 		medium: {
@@ -109,9 +119,9 @@ export const lightTheme: Theme = {
 			gap: '0.5rem',
 		},
 		small: {
-			fontSize: '0.75rem',
-			padding: '0.25rem 0.5rem',
-			gap: '0.25rem',
+			fontSize: '0.8rem',
+			padding: '0.3rem 0.8rem',
+			gap: '0.3rem',
 		},
 	},
 	buttonScheme: {
@@ -119,10 +129,25 @@ export const lightTheme: Theme = {
 			color: '#ffffff',
 			backgroundColor: '#4db6ac',
 		},
-		normal: {
-			color: '#ffffff',
-			backgroundColor: '#a8edea',
+		secondary: {
+			color: '#213C48',
+			backgroundColor: 'transparent',
 		},
+		blur: {
+			color: '#213C48',
+			backgroundColor: 'rgba(255, 255, 255, 0.15)',
+		},
+		default: {
+			color: '#213C48',
+			backgroundColor: '#e0f7fa',
+		},
+	},
+	shadow: {
+		default: '-4px 4px 4px rgba(0, 0, 0, 0.2), inset 2px -4px 4px rgba(0, 0, 0, 0.3)',
+		strong: '-15px 15px 15px rgba(0, 0, 0, 0.4), inset 4px -4px 8px rgba(0, 0, 0, 0.2)',
+		light: '-2px 2px 2px rgba(0, 0, 0, 0.2)',
+		hover: '-10px 10px 10px rgba(0, 0, 0, 0.3), inset 4px -6px 4px rgba(0, 0, 0, 0.3)',
+		none: 'none',
 	},
 	borderRadius: {
 		default: '0.8rem',
@@ -164,11 +189,19 @@ export const darkTheme: Theme = {
 	buttonScheme: {
 		primary: {
 			color: '#ffffff',
-			backgroundColor: '#3a5663',
+			backgroundColor: '#00867d',
 		},
-		normal: {
+		secondary: {
+			color: 'e8e8e8',
+			backgroundColor: 'transparent',
+		},
+		blur: {
+			color: '#e8e8e8',
+			backgroundColor: 'rgba(1, 1, 1, 0.15)',
+		},
+		default: {
 			color: '#ffffff',
-			backgroundColor: '#141414',
+			backgroundColor: '#3a5663',
 		},
 	},
 };
