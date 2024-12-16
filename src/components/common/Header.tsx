@@ -4,11 +4,13 @@ import { ThemeContext } from '../../context/themeContext';
 import { MdLightMode, MdDarkMode } from 'react-icons/md';
 import QRULogo from '../common/Logo';
 import Drawer from './Drawer';
+import Button from './Button';
+import { FaSearch } from 'react-icons/fa';
 
 const Header = () => {
-	const { toggleTheme, themeName } = useContext(ThemeContext);
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isDrawerOpen, setIsMenuOpen] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
 
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
 	const drawerRef = useRef<HTMLDivElement | null>(null);
@@ -17,12 +19,28 @@ const Header = () => {
 		alert('로그인/로그아웃 클릭!');
 	};
 
+	const handleAbout = () => {
+		alert('어떤 서비스인가요? 클릭!');
+	};
+
+	const handleSearch = () => {
+		alert('친구찾기 클릭!');
+	};
+
 	const toggleMenu = () => {
 		setIsMenuOpen((prev) => !prev);
 	};
 
 	const toggleDropdown = () => {
 		setIsDropdownOpen((prev) => !prev);
+	};
+
+	const toggleSearch = () => {
+		if (window.innerWidth > 768) {
+			setIsSearchOpen((prev) => !prev);
+		} else {
+			setIsMobileSearchOpen(true);
+		}
 	};
 
 	useEffect(() => {
@@ -57,73 +75,117 @@ const Header = () => {
 	}, []);
 
 	return (
-		<HeaderContainer>
+		<HeaderStyle>
 			<LeftContainer>
-				<DrawerContainer ref={drawerRef}>
-					<Drawer isOpen={isMenuOpen} onClick={toggleMenu} />
-				</DrawerContainer>
-				<QRULogo />
-				<NavMenu>
-					<NavItem onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown} ref={dropdownRef}>
-						어떤 서비스인가요?
+				{/* 드로어 */}
+				<div className="drawer" ref={drawerRef}>
+					<Drawer isOpen={isDrawerOpen} onClick={toggleMenu} />
+				</div>
+				{/* 로고 */}
+				<QRULogo size="large" />
+				{/* 네비게이션 */}
+				<Navigator>
+					<Item
+						onClick={handleAbout}
+						onMouseEnter={toggleDropdown}
+						onMouseLeave={toggleDropdown}
+						ref={dropdownRef}
+					>
+						<a href="/">어떤 서비스인가요?</a>
 						{isDropdownOpen && (
-							<DropdownMenu>
-								<DropdownItem>서비스 소개</DropdownItem>
-								<DropdownItem>이용 방법</DropdownItem>
-							</DropdownMenu>
+							<Dropdown>
+								<div className="item">서비스 소개</div>
+								<div className="item">사용방법</div>
+							</Dropdown>
 						)}
-					</NavItem>
-					<NavItem>친구찾기</NavItem>
-				</NavMenu>
+					</Item>
+					<Item onClick={handleSearch}>
+						<a href="/">친구찾기</a>
+					</Item>
+				</Navigator>
 			</LeftContainer>
 			<RightContainer>
-				<ButtonContainer>
-					<LoginButton onClick={handleLoginLogout}>로그인</LoginButton>
-					<LoginButton onClick={handleLoginLogout}>회원가입</LoginButton>
-				</ButtonContainer>
-				<ToggleThemeButton onClick={toggleTheme}>
-					{themeName === 'light' ? <StyledIcon as={MdLightMode} /> : <StyledIcon as={MdDarkMode} />}
-				</ToggleThemeButton>
+				<SearchContainer isOpen={isSearchOpen}>
+					<input className="searchInput" type="text" placeholder="검색어를 입력하세요" />
+					<Button onClick={toggleSearch}>
+						<FaSearch />
+					</Button>
+				</SearchContainer>
+				<Button onClick={handleLoginLogout}>로그인</Button>
+				<div className="hideOnMobile">
+					<Button onClick={handleLoginLogout}>회원가입</Button>
+					<ThemeSwitcher />
+				</div>
 			</RightContainer>
-			<AnimatedMobileNavMenu className={isMenuOpen ? 'open' : 'closed'}>
-				<LoginButton onClick={handleLoginLogout}>로그인</LoginButton>
-				<LoginButton onClick={handleLoginLogout}>회원가입</LoginButton>
-				<NavItem>어떤 서비스인가요?</NavItem>
-				<NavItem>친구찾기</NavItem>
-			</AnimatedMobileNavMenu>
-		</HeaderContainer>
+			{/* 모바일 메뉴: 드로어 버튼을 누르면 나타남 */}
+			<MoblieMenu className={isDrawerOpen ? 'open' : 'closed'}>
+				<ThemeSwitcher />
+				<Button onClick={handleLoginLogout}>회원가입</Button>
+				<Item onClick={handleAbout}>어떤 서비스인가요?</Item>
+				<Item onClick={handleSearch}>친구 찾기</Item>
+			</MoblieMenu>
+		</HeaderStyle>
 	);
 };
 
-const HeaderContainer = styled.header`
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+const ThemeSwitcher = () => {
+	const { themeName, toggleTheme } = useContext(ThemeContext);
+	return (
+		<Button onClick={toggleTheme} scheme="secondary" boxShadow="none">
+			{themeName === 'light' ? <MdLightMode /> : <MdDarkMode />}
+		</Button>
+	);
+};
+
+const HeaderStyle = styled.header`
+	width: 100%;
 	height: 3.5rem;
-	background-color: ${({ theme }) => theme.color.blur};
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	padding: 0.2rem 1.2rem;
 	color: ${({ theme }) => theme.color.text};
+	background: ${({ theme }) => theme.color.blur};
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 -4px 10px rgba(0, 0, 0, 0.1);
+	gap: 1rem;
 `;
 
 const LeftContainer = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 1.2rem;
-`;
 
-const DrawerContainer = styled.div`
-	display: none;
+	.drawer {
+		display: none;
 
-	@media (max-width: 768px) {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
+		@media (max-width: 768px) {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+		}
 	}
 `;
 
-const NavMenu = styled.nav`
+const Item = styled.div`
+	padding: 0.5rem;
+	cursor: pointer;
+	font-size: ${({ theme }) => theme.fontSize.small};
+	position: relative;
+
+	a {
+		color: ${({ theme }) => theme.color.text};
+		font-size: ${({ theme }) => theme.fontSize.small};
+		font-weight: bold;
+
+		&:hover {
+			color: ${({ theme }) => theme.color.primary};
+		}
+	}
+`;
+
+const Navigator = styled.nav`
 	display: flex;
 	gap: 1rem;
 
@@ -132,134 +194,92 @@ const NavMenu = styled.nav`
 	}
 `;
 
-const AnimatedMobileNavMenu = styled.nav`
+const MoblieMenu = styled.nav`
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
 	position: absolute;
 	left: 0;
 	top: 3.5rem;
-	background-color: ${({ theme }) => theme.color.blur};
+	background: ${({ theme }) => theme.color.background};
 	width: 100%;
 	padding: 1rem;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	transform-origin: top;
 	transition: transform 0.3s ease, opacity 0.3s ease;
-	border-radius: 0 0 2rem 2rem;
+	border-radius: 0 0 ${({ theme }) => theme.borderRadius.default} ${({ theme }) => theme.borderRadius.default};
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 -4px 10px rgba(0, 0, 0, 0.3);
+	z-index: 1000;
 
 	&.open {
 		transform: scaleY(1);
 		opacity: 1;
+		transition: transform 0.3s ease, opacity 1s ease;
 	}
 
 	&.closed {
 		transform: scaleY(0);
 		opacity: 0;
+		transition: transform 0.3s ease, opacity 1s ease;
 	}
 `;
 
-const NavItem = styled.div`
-	padding: 0.5rem;
-	cursor: pointer;
-	font-size: 1rem;
-	position: relative;
-
-	&:hover {
-		color: ${({ theme }) => theme.color.onText};
-	}
-`;
-
-const DropdownMenu = styled.div`
+const Dropdown = styled.div`
 	position: absolute;
 	top: 100%;
 	left: 0;
-	background-color: ${({ theme }) => theme.color.blur};
+	background: ${({ theme }) => theme.color.surface};
 	padding: 0.5rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 2px -4px 6px rgba(0, 0, 0, 0.2);
 	border-radius: ${({ theme }) => theme.borderRadius.default};
-`;
+	z-index: 1000;
 
-const DropdownItem = styled.div`
-	padding: 0.5rem;
-	border-radius: ${({ theme }) => theme.borderRadius.default};
-	cursor: pointer;
+	.item {
+		padding: 0.5rem;
+		border-radius: ${({ theme }) => theme.borderRadius.default};
+		cursor: pointer;
 
-	&:hover {
-		color: ${({ theme }) => theme.color.text};
-		background-color: ${({ theme }) => theme.color.blur};
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 2px -4px 6px rgba(0, 0, 0, 0.1);
+		&:hover {
+			background: ${({ theme }) => theme.color.secondary};
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 2px -4px 6px rgba(0, 0, 0, 0.2);
+		}
 	}
 `;
 
 const RightContainer = styled.div`
 	display: flex;
+	justify-content: flex-end;
 	align-items: center;
 	gap: 1rem;
+
+	.hideOnMobile {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+
+		@media (max-width: 768px) {
+			display: none;
+		}
+	}
 `;
 
-const ButtonContainer = styled.div`
+const SearchContainer = styled.div<{ isOpen: boolean }>`
 	display: flex;
-	gap: 0.5rem;
+	justify-content: flex-end;
 	align-items: center;
+	overflow: visible;
+	width: ${({ isOpen }) => (isOpen ? '15rem' : '5rem')};
+	transition: width 0.3s ease;
 
-	@media (max-width: 768px) {
-		display: none;
+	.searchInput {
+		width: ${({ isOpen }) => (isOpen ? '100%' : '0')};
+		padding: ${({ isOpen }) => (isOpen ? '0.5rem' : '0')};
+		opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+		border: ${({ theme }) => `1px solid ${theme.color.secondary}`};
+		border-radius: ${({ theme }) => theme.borderRadius.default};
+		transition: opacity 0.3s ease, padding 0.3s ease;
 	}
-`;
-
-const LoginButton = styled.button`
-	height: 2.5rem;
-	width: auto;
-	max-width: 8rem;
-	margin: 0.3rem;
-
-	background: ${({ theme }) => theme.color.secondary};
-	color: ${({ theme }) => theme.color.text};
-	border: none;
-	border-radius: ${({ theme }) => theme.borderRadius.default};
-	padding: 0.5rem 1rem;
-	cursor: pointer;
-	font-size: 1rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 2px -4px 6px rgba(0, 0, 0, 0.3);
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-
-	&:hover {
-		background: ${({ theme }) => theme.color.blur};
-	}
-`;
-
-const ToggleThemeButton = styled.button`
-	height: 2.5rem;
-	aspect-ratio: 1 / 1;
-	background: transparent;
-	color: ${({ theme }) => theme.color.text};
-	border: none;
-	border-radius: ${({ theme }) => theme.borderRadius.default};
-	padding: 0.5rem 1rem;
-	cursor: pointer;
-	font-size: 1rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	&:hover {
-		background-color: ${({ theme }) => theme.color.blur};
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 2px -4px 6px rgba(0, 0, 0, 0.1);
-	}
-
-	@media (max-width: 768px) {
-		position: absolute;
-		right: 1rem;
-	}
-`;
-
-const StyledIcon = styled(MdLightMode)`
-	font-size: 1.5rem;
-	color: ${({ theme }) => theme.color.text};
 `;
 
 export default Header;
