@@ -24,7 +24,6 @@ const Footer = () => {
 
 const FooterStyle = styled.footer`
 	width: 100%;
-	margin: 0 auto;
 	margin-top: auto;
 	background: ${({ theme }) => theme.color.blur};
 	color: ${({ theme }) => theme.color.onBackground};
@@ -69,7 +68,7 @@ const FooterStyle = styled.footer`
 
 	p {
 		color: ${({ theme }) => theme.color.onBackground};
-		font-size: ${({ theme }) => theme.fontSize.samll};
+		font-size: ${({ theme }) => theme.fontSize.small};
 		text-align: center;
 	}
 `;
