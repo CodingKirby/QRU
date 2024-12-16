@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FaPlus } from 'react-icons/fa';
 import Button from '../common/Button';
+import { css } from 'styled-components';
 
 function QRULogo() {
 	const handleCreateCard = () => {
@@ -9,7 +10,7 @@ function QRULogo() {
 
 	return (
 		<LogoCard>
-			<Content>
+			<div className="content">
 				<QRBox>
 					<div></div>
 					<div className="filled"></div>
@@ -29,72 +30,94 @@ function QRULogo() {
 						나만의 디지털 명함으로 새로운 만남을 손쉽게!
 					</div>
 				</TextBox>
-			</Content>
-			<ButtonContainer>
+			</div>
+			<div className="footer">
 				<Button
 					onClick={handleCreateCard}
-					size="large"
+					size="extraLarge"
 					scheme="primary"
 					icon={<FaPlus />}
-					hoverStyle={hoverStyle}
-					activeStyle={activeStyle}
-					focusStyle={focusStyle}
+					styles={extraButtonStyles}
 				>
 					나만의 명함 만들러 가기
 				</Button>
-			</ButtonContainer>
+			</div>
 		</LogoCard>
 	);
 }
 
 const LogoCard = styled.div`
+	width: 70%;
+	min-width: 300px;
+	max-width: ${({ theme }) => theme.layout.width.large};
+
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: space-evenly;
 	align-items: center;
-	width: 100%;
-	min-width: 240px;
-	max-width: 1024px;
+
 	aspect-ratio: 16 / 9;
 	background: ${({ theme }) => theme.color.surface};
 	border-radius: ${({ theme }) => theme.borderRadius.default};
-	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 -4px 8px rgba(0, 0, 0, 0.2);
+	box-shadow: ${({ theme }) => theme.shadow.strong};
+
 	position: relative;
 	transform-style: preserve-3d;
 	transform: rotateX(15deg) rotateY(-15deg);
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
+
 	padding: 2rem;
-	margin: 2rem 0;
+	margin-top: clamp(2rem, 5vw, 5rem);
+	margin-bottom: clamp(2rem, 5vw, 5rem);
 	gap: 2rem;
 	will-change: transform, box-shadow;
 
+	&::before {
+		content: '';
+		position: absolute;
+		top: -10px;
+		bottom: -10px;
+		left: -10px;
+		right: -10px;
+		background: transparent; /* 투명 영역 */
+		border-radius: ${({ theme }) => theme.borderRadius.default};
+		z-index: -1;
+	}
+
 	&:hover {
 		transform: rotateX(0deg) rotateY(0deg);
-		box-shadow: 0 0.8vw 2vw rgba(0, 0, 0, 0.5), inset 0 -0.6vw 1.2vw rgba(0, 0, 0, 0.15);
+		box-shadow: ${({ theme }) => theme.shadow.hover};
 	}
 
-	&:hover .logo-text {
-		text-shadow: -0.3vw 0.2vw 0.2vw rgba(0, 0, 0, 0.1);
+	&:hover .logoText {
+		text-shadow: ${({ theme }) => theme.shadow.light};
 	}
 
-	&:hover .subtext {
-		text-shadow: -0.2vw 0.2vw 0.2vw rgba(0, 0, 0, 0.1);
+	&:hover .subText {
+		text-shadow: ${({ theme }) => theme.shadow.light};
 	}
-`;
 
-const Content = styled.div`
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
-	justify-content: space-between;
-	width: 100%;
-	gap: 2rem;
+	.content {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		justify-content: space-evenly;
+		width: 100%;
+		gap: 2rem;
+	}
+
+	.footer {
+		width: 100%;
+		height: 20%;
+		display: flex;
+		justify-content: center;
+		cursor: pointer;
+	}
 `;
 
 const QRBox = styled.div`
 	display: grid;
-	width: 40%;
-	min-width: 60px;
+	width: 30%;
 	grid-template-columns: repeat(3, 1fr);
 	grid-template-rows: repeat(3, 1fr);
 	gap: 5%;
@@ -127,59 +150,63 @@ const QRBox = styled.div`
 	}
 `;
 
-const hoverStyle = `
-	transform: translateY(-0.4vw);
-	box-shadow: -1vw 1vw 1.5vw rgba(0, 0, 0, 0.3), inset 0.4vw -0.6vw 0.4vw rgba(0, 0, 0, 0.3);
-`;
-
-const activeStyle = `
-	transform: translateY(0);
-	box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.2), inset 0 -0.4vw 0.4vw rgba(0, 0, 0, 0.3);
-`;
-
-const focusStyle = `
-	outline: none;
-`;
-
 const TextBox = styled.div`
-	height: 100%;
+	width: 60%;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	gap: 0.5rem;
+	gap: clamp(0.5rem, 2vw, 2rem);
+	line-height: 1;
 
 	.logoText {
-		line-height: 1;
-		font-size: ${({ theme }) => theme.fontSize.extraLarge};
+		font-size: clamp(1.5rem, 8vw, 8rem);
 		font-weight: bolder;
 		color: ${({ theme }) => theme.color.primary};
 		text-shadow: -4px 2px 2px rgba(0, 0, 0, 0.2);
 		transition: text-shadow 0.3s ease;
 
-		@media (max-width: 380px) {
-			font-size: ${({ theme }) => theme.fontSize.medium};
+		&:hover {
+			text-shadow: ${({ theme }) => theme.shadow.light};
 		}
 	}
 
 	.subText {
-		font-size: ${({ theme }) => theme.fontSize.small};
+		width: 100%;
+		line-height: 1.2;
+		font-size: clamp(0.8rem, 2vw, 2rem);
 		color: ${({ theme }) => theme.color.text};
 		text-align: left;
-		width: 100%;
+
 		text-shadow: -4px 2px 3px rgba(0, 0, 0, 0.2);
 		transition: text-shadow 0.3s ease;
-
-		@media (max-width: 380px) {
-			font-size: ${({ theme }) => theme.fontSize.extraSmall};
-		}
+		word-break: keep-all;
 	}
 `;
 
-const ButtonContainer = styled.div`
+const extraButtonStyles = css`
 	width: 100%;
-	display: flex;
-	justify-content: center;
-	cursor: pointer;
+	font-size: clamp(1rem, 3vw, 3rem);
+	padding: clamp(0.5rem, 2vw, 2rem);
+	gap: clamp(0.5rem, 2vw, 2rem);
+
+	.buttonIcon {
+		font-size: clamp(1rem, 3vw, 3rem);
+	}
+
+	&:hover {
+		background: ${({ theme }) => theme.color.primary};
+		transform: translateY(-0.2rem) translateX(0.2rem);
+		box-shadow: ${({ theme }) => theme.shadow.hover};
+	}
+
+	&:active {
+		transform: translateY(0);
+		box-shadow: ${({ theme }) => theme.shadow.default};
+	}
+
+	&:focus {
+		outline: none;
+	}
 `;
 
 export default QRULogo;
