@@ -18,6 +18,7 @@ export type ColorKey =
 	| 'onText'; // 텍스트 위의 색상
 export type FontSize = 'extraLarge' | 'large' | 'medium' | 'small' | 'extraSmall';
 export type HeadingSize = 'extraLarge' | 'large' | 'medium' | 'small';
+export type BorderRadius = 'default' | 'rounded';
 export type ButtonSize = 'extraLarge' | 'large' | 'medium' | 'small';
 export type ButtonScheme = 'primary' | 'secondary' | 'blur' | 'default';
 export type Shadow = 'default' | 'strong' | 'light' | 'hover' | 'none';
@@ -27,6 +28,7 @@ interface Theme {
 	name: ThemeName;
 	color: Record<ColorKey, string>;
 	fontSize: Record<FontSize, string>;
+	borderRadius: Record<BorderRadius, string>;
 	heading: {
 		[key in HeadingSize]: {
 			fontSize: string;
@@ -49,9 +51,6 @@ interface Theme {
 	shadow: {
 		[key in Shadow]: string;
 	};
-	borderRadius: {
-		default: string;
-	};
 	layout: {
 		width: {
 			[key in LayoutWidth]: string;
@@ -72,7 +71,7 @@ export const lightTheme: Theme = {
 		background: 'linear-gradient(135deg, #a8edea, #fed6e3)',
 		surface: '#ffffff',
 		error: '#b00020',
-		onPrimary: '#ffffff',
+		onPrimary: '#141414',
 		onSecondary: '#213C48',
 		onBackground: '#ffffff',
 		onSurface: '#000000',
@@ -82,11 +81,11 @@ export const lightTheme: Theme = {
 		onText: '#e0f7fa',
 	},
 	fontSize: {
-		extraLarge: '3.5rem',
-		large: '2.5rem',
-		medium: '1.5rem',
+		extraLarge: '1.5rem',
+		large: '1.3rem',
+		medium: '1.1rem',
 		small: '1rem',
-		extraSmall: '0.75rem',
+		extraSmall: '0.9rem',
 	},
 	heading: {
 		extraLarge: {
@@ -102,24 +101,28 @@ export const lightTheme: Theme = {
 			fontSize: '1rem',
 		},
 	},
+	borderRadius: {
+		default: 'clamp(1rem, 3.5vw, 1.2rem)',
+		rounded: 'clamp(1.5rem, 8vw, 5rem)',
+	},
 	button: {
 		extraLarge: {
-			fontSize: '3rem',
+			fontSize: '1.5rem',
 			padding: '1rem 2rem',
 			gap: '1.5rem',
 		},
 		large: {
-			fontSize: '1.5rem',
+			fontSize: '1.3rem',
 			padding: '1rem 1.5rem',
 			gap: '1rem',
 		},
 		medium: {
-			fontSize: '1rem',
+			fontSize: '1.1rem',
 			padding: '0.5rem 1rem',
 			gap: '0.5rem',
 		},
 		small: {
-			fontSize: '0.8rem',
+			fontSize: '1rem',
 			padding: '0.3rem 0.8rem',
 			gap: '0.3rem',
 		},
@@ -148,9 +151,6 @@ export const lightTheme: Theme = {
 		light: '-2px 2px 2px rgba(0, 0, 0, 0.2)',
 		hover: '-10px 10px 10px rgba(0, 0, 0, 0.3), inset 4px -6px 4px rgba(0, 0, 0, 0.3)',
 		none: 'none',
-	},
-	borderRadius: {
-		default: '0.8rem',
 	},
 	layout: {
 		width: {
@@ -185,6 +185,13 @@ export const darkTheme: Theme = {
 		blur: 'rgba(1, 1, 1, 0.1)',
 		text: '#e8e8e8',
 		onText: '#00867d',
+	},
+	shadow: {
+		default: '-4px 4px 4px rgba(0, 0, 0, 0.3), inset 2px -4px 4px rgba(0, 0, 0, 0.7)',
+		strong: '-15px 15px 15px rgba(0, 0, 0, 0.4), inset 4px -4px 8px rgba(0, 0, 0, 0.7)',
+		light: '-2px 2px 2px rgba(0, 0, 0, 0.3), inset 1px -1px 1px rgba(0, 0, 0, 0.5)',
+		hover: '-10px 10px 10px rgba(0, 0, 0, 0.5), inset 4px -6px 4px rgba(0, 0, 0, 0.7)',
+		none: 'none',
 	},
 	buttonScheme: {
 		primary: {
