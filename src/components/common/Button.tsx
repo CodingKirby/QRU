@@ -1,69 +1,74 @@
-import React from 'react';
-import styled from 'styled-components';
+import styled, { CSSProp } from 'styled-components';
+import { ButtonScheme, ButtonSize, Shadow } from '../../styles/theme';
 
-interface ButtonProps {
-	onClick?: () => void; // 클릭 핸들러
-	children?: React.ReactNode; // 버튼 텍스트 또는 콘텐츠
-	icon?: React.ReactNode; // 선택적인 아이콘
-	className?: string; // 추가적인 클래스명
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+	children: React.ReactNode;
+	icon?: React.ReactNode;
+	size?: ButtonSize;
+	scheme?: ButtonScheme;
+	boxShadow?: Shadow;
+	disabled?: boolean;
+	isLoading?: boolean;
+	styles?: CSSProp;
 }
 
-const Button: React.FC<ButtonProps> = ({ onClick, children, icon, className }) => {
+function Button({ children, icon, size, scheme, boxShadow, disabled, isLoading, ...props }: Props) {
 	return (
-		<StyledButton onClick={onClick} className={className}>
-			{icon && <ButtonIcon>{icon}</ButtonIcon>}
+		<ButtonStyle
+			size={size}
+			scheme={scheme}
+			boxShadow={boxShadow}
+			disabled={disabled}
+			isLoading={isLoading}
+			{...props}
+		>
+			{icon && <div className="buttonIcon">{icon}</div>}
 			{children}
-		</StyledButton>
+		</ButtonStyle>
 	);
-};
+}
 
-export const StyledButton = styled.button`
-	display: inline-flex;
+export const ButtonStyle = styled.button<Omit<Props, 'children'>>`
+	min-height: 2.5rem;
+	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 5%; /* 아이콘과 텍스트 사이의 간격 */
-	padding: 5%; /* 부모 크기에 비례한 패딩 */
-	font-size: 1.8vw; /* 화면 너비에 비례한 텍스트 크기 */
-	font-weight: bold;
-	color: #fff;
-	background: #4db6ac;
+	line-height: 1;
+	flex-shrink: 0;
+
+	font-size: ${({ theme, size }) => (size ? theme.button[size].fontSize : theme.button.medium.fontSize)};
+	padding: ${({ theme, size }) => (size ? theme.button[size].padding : theme.button.medium.padding)};
+	gap: ${({ theme, size }) => (size ? theme.button[size].gap : theme.button.medium.gap)};
+
+	color: ${({ theme, scheme }) => (scheme ? theme.buttonScheme[scheme].color : theme.buttonScheme.default.color)};
+	background: ${({ theme, scheme }) =>
+		scheme ? theme.buttonScheme[scheme].backgroundColor : theme.buttonScheme.default.backgroundColor};
 	border: none;
-	border-radius: 1vw;
-	cursor: pointer;
-	box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.2), inset 0 -0.4vw 0.4vw rgba(0, 0, 0, 0.3);
-	width: 100%; /* 버튼 너비를 부모에 맞춤 */
-	height: auto;
-	white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-	overflow: hidden; /* 초과 텍스트 숨김 */
-	text-overflow: ellipsis; /* 초과 텍스트 말줄임표 */
-	transition: transform 0.2s ease, box-shadow 0.2s ease; /* 부드러운 애니메이션 */
+	border-radius: ${({ theme }) => theme.borderRadius.default};
+	box-shadow: ${({ theme, boxShadow }) => (boxShadow ? theme.shadow[boxShadow] : theme.shadow.default)};
+	opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+	pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+	cursor: ${({ disabled }) => (disabled ? 'none' : 'pointer')};
+
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 	-webkit-tap-highlight-color: transparent; /* 모바일 터치 하이라이트 제거 */
 
+	.buttonIcon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: ${({ theme, size }) => (size ? theme.button[size].fontSize : theme.button.medium.fontSize)};
+	}
+
 	&:hover {
-		transform: translateY(-0.4vw); /* 부드러운 이동 */
-		box-shadow: 0 0.8vw 1.5vw rgba(0, 0, 0, 0.3), inset 0.4vw -0.6vw 0.6vw rgba(0, 0, 0, 0.2); /* hover 상태에서 더 강한 그림자 */
+		background: ${({ theme }) => theme.color.blur};
+		box-shadow: ${({ theme }) => theme.shadow.default};
 	}
 
-	&:active {
-		transform: translateY(0); /* 클릭 시 원래 위치 */
-		box-shadow: 0 0.4vw 1vw rgba(0, 0, 0, 0.2), inset 0 -0.4vw 0.4vw rgba(0, 0, 0, 0.3); /* 클릭 시 기본 상태로 */
-	}
-
-	&:focus {
-		outline: none;
-	}
-
-	&:focus-visible {
-		outline: 0.2vw solid #81d4fa;
-		outline-offset: 0.4vw;
-	}
-`;
-
-export const ButtonIcon = styled.span`
-	display: inline-flex;
-	align-items: center;
-	font-size: 2vw;
-	color: #fff;
+	${({ styles }) => styles || ''}
 `;
 
 export default Button;

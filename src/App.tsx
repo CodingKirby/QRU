@@ -1,11 +1,15 @@
+import Layout from './components/layout/Layout';
 import Home from './pages/Home';
-import { GlobalStyle } from './styles/global';
+import { QRUThemeProvider } from './context/themeContext';
 
 function App() {
 	return (
 		<>
-			<GlobalStyle />
-			<Home />
+			<QRUThemeProvider>
+				<Layout>
+					<Home />
+				</Layout>
+			</QRUThemeProvider>
 		</>
 	);
 }
