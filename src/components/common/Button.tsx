@@ -33,8 +33,8 @@ export const ButtonStyle = styled.button<Omit<Props, 'children'>>`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-weight: bolder;
 	line-height: 1;
+	flex-shrink: 0;
 
 	font-size: ${({ theme, size }) => (size ? theme.button[size].fontSize : theme.button.medium.fontSize)};
 	padding: ${({ theme, size }) => (size ? theme.button[size].padding : theme.button.medium.padding)};
@@ -57,7 +57,7 @@ export const ButtonStyle = styled.button<Omit<Props, 'children'>>`
 	-webkit-tap-highlight-color: transparent; /* 모바일 터치 하이라이트 제거 */
 
 	.buttonIcon {
-		display: inline-flex;
+		display: flex;
 		align-items: center;
 		justify-content: center;
 		font-size: ${({ theme, size }) => (size ? theme.button[size].fontSize : theme.button.medium.fontSize)};
