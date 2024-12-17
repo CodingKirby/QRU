@@ -1,284 +1,322 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ThemeContext } from '../../context/themeContext';
-import { MdLightMode, MdDarkMode } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+import { auth, provider } from '../../services/firebase';
+import {
+	browserLocalPersistence,
+	onAuthStateChanged,
+	setPersistence,
+	signInWithPopup,
+	signOut,
+	User,
+} from 'firebase/auth';
 import QRULogo from '../common/Logo';
-import Drawer from './Drawer';
 import Button from './Button';
-import { FaSearch } from 'react-icons/fa';
+import ThemeSwitcher from '../header/ThemeSwitcher';
+import Drawer from '../header/Drawer';
+import Dropdown from '../header/Dropdown';
+import Search from '../header/Search';
+import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 
-const Header = () => {
-	const [isDrawerOpen, setIsMenuOpen] = useState(false);
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const [isSearchOpen, setIsSearchOpen] = useState(false);
+// 네비게이션 아이템
+const NAVITEM = [
+	{
+		title: '서비스 소개',
+		link: '/about',
+		subItems: [
+			{
+				title: '어떤 서비스인가요?',
+				link: '/about',
+			},
+			{
+				title: '어떻게 사용하나요?',
+				link: '/about',
+			},
+		],
+	},
+	{ title: '명함 찾기', link: '/shuffle' },
+];
 
-	const dropdownRef = useRef<HTMLDivElement | null>(null);
-	const drawerRef = useRef<HTMLDivElement | null>(null);
-
-	const handleLoginLogout = () => {
-		alert('로그인/로그아웃 클릭!');
+function Header() {
+	// 네비게이션 이동
+	const navigate = useNavigate();
+	const handleNavigation = (link: string) => {
+		navigate(link);
 	};
 
-	const handleAbout = () => {
-		alert('어떤 서비스인가요? 클릭!');
-	};
+	// 사용자 인증
+	const [user, setUser] = useState<User | null>(null);
 
-	const handleSearch = () => {
-		alert('친구찾기 클릭!');
-	};
-
-	const toggleMenu = () => {
-		setIsMenuOpen((prev) => !prev);
-	};
-
-	const toggleDropdown = () => {
-		setIsDropdownOpen((prev) => !prev);
-	};
-
-	const toggleSearch = () => {
-		if (window.innerWidth > 768) {
-			setIsSearchOpen((prev) => !prev);
-		} else {
-			setIsMobileSearchOpen(true);
+	const handleGoogleLogin = async () => {
+		try {
+			await setPersistence(auth, browserLocalPersistence); // 로그인 지속성 설정
+			const result = await signInWithPopup(auth, provider);
+			setUser(result.user);
+			console.log('User info:', result.user);
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error('Google Login Error:', error.message);
+				alert(`Login failed: ${error.message}`);
+			} else {
+				console.error('Unexpected error:', error);
+			}
 		}
 	};
 
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				dropdownRef.current &&
-				!dropdownRef.current.contains(event.target as Node) &&
-				drawerRef.current &&
-				!drawerRef.current.contains(event.target as Node)
-			) {
-				setIsMenuOpen(false);
-			}
-		};
+	// 로그아웃
+	const handleLogout = async () => {
+		try {
+			await signOut(auth);
+			setUser(null);
+		} catch (error) {
+			console.error('Logout Error:', error);
+		}
+	};
 
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
+	// 새로고침 시 로그인 상태 유지
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+			setUser(currentUser);
+		});
+		return () => unsubscribe();
 	}, []);
 
+	// 상태 관리
+	const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+	const [isMobile, setIsMobile] = useState<boolean>(false);
+
+	// Drawer와 Dropdown의 참조
+	const drawerRef = useRef<HTMLDivElement>(null);
+	const dropdownRef = useRef<HTMLDivElement>(null);
+
+	const toggleDrawer = () => {
+		setIsDrawerOpen((prev) => !prev);
+	};
+
+	const toggleSearch = () => {
+		setIsSearchOpen((prev) => !prev);
+	};
+
+	// 화면 크기 감지
 	useEffect(() => {
 		const handleResize = () => {
+			setIsMobile(window.innerWidth <= 768); // 768px 이하일 경우 모바일로 간주
 			if (window.innerWidth > 768) {
-				setIsMenuOpen(false);
+				setOpenDropdownIndex(null); // 드롭다운 초기화
+				setIsDrawerOpen(false); // 드로어 닫기
+			}
+		};
+		handleResize(); // 초기 렌더링 시 실행
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
+	// 외부 클릭 감지
+	useEffect(() => {
+		const handleOutsideClick = (event: MouseEvent) => {
+			if (
+				isDrawerOpen &&
+				!drawerRef.current?.contains(event.target as Node) &&
+				!dropdownRef.current?.contains(event.target as Node)
+			) {
+				setIsDrawerOpen(false);
+				setOpenDropdownIndex(null);
 			}
 		};
 
-		window.addEventListener('resize', handleResize);
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
-	}, []);
+		document.addEventListener('mousedown', handleOutsideClick);
+		return () => document.removeEventListener('mousedown', handleOutsideClick);
+	}, [isDrawerOpen, openDropdownIndex]);
 
 	return (
-		<HeaderStyle>
-			<LeftContainer>
+		<HeaderStyle $isSearchOpen={isSearchOpen}>
+			<div className="left-section" ref={drawerRef}>
 				{/* 드로어 */}
-				<div className="drawer" ref={drawerRef}>
-					<Drawer isOpen={isDrawerOpen} onClick={toggleMenu} />
-				</div>
+				<Drawer isOpen={isDrawerOpen} onClick={toggleDrawer} />
 				{/* 로고 */}
 				<QRULogo size="large" />
 				{/* 네비게이션 */}
-				<Navigator>
-					<Item
-						onClick={handleAbout}
-						onMouseEnter={toggleDropdown}
-						onMouseLeave={toggleDropdown}
-						ref={dropdownRef}
-					>
-						<a href="/">어떤 서비스인가요?</a>
-						{isDropdownOpen && (
-							<Dropdown>
-								<div className="item">서비스 소개</div>
-								<div className="item">사용방법</div>
-							</Dropdown>
-						)}
-					</Item>
-					<Item onClick={handleSearch}>
-						<a href="/">친구찾기</a>
-					</Item>
-				</Navigator>
-			</LeftContainer>
-			<RightContainer>
-				<SearchContainer isOpen={isSearchOpen}>
-					<input className="searchInput" type="text" placeholder="검색어를 입력하세요" />
-					<Button onClick={toggleSearch}>
-						<FaSearch />
-					</Button>
-				</SearchContainer>
-				<Button onClick={handleLoginLogout}>로그인</Button>
-				<div className="hideOnMobile">
-					<Button onClick={handleLoginLogout}>회원가입</Button>
-					<ThemeSwitcher />
-				</div>
-			</RightContainer>
-			{/* 모바일 메뉴: 드로어 버튼을 누르면 나타남 */}
-			<MoblieMenu className={isDrawerOpen ? 'open' : 'closed'}>
-				<ThemeSwitcher />
-				<Button onClick={handleLoginLogout}>회원가입</Button>
-				<Item onClick={handleAbout}>어떤 서비스인가요?</Item>
-				<Item onClick={handleSearch}>친구 찾기</Item>
-			</MoblieMenu>
+				{!isMobile && (
+					<nav className="navigation">
+						<ul>
+							{NAVITEM.map((item, index) => (
+								<li
+									key={index}
+									onMouseEnter={() => item.subItems && setOpenDropdownIndex(index)}
+									onMouseLeave={() => setOpenDropdownIndex(null)}
+								>
+									<a
+										href={item.link}
+										className={`nav-link ${openDropdownIndex === index ? 'hover' : ''}`}
+										aria-haspopup={!!item.subItems}
+										aria-expanded={openDropdownIndex === index}
+									>
+										{item.title}
+									</a>
+									{/* 드롭다운 */}
+									<Dropdown isOpen={openDropdownIndex === index} isMobile={isMobile}>
+										{item.subItems?.map((subItem, subIndex) => (
+											<div
+												key={subIndex}
+												className="item"
+												onClick={() => handleNavigation(subItem.link)}
+											>
+												{subItem.title}
+											</div>
+										))}
+									</Dropdown>
+								</li>
+							))}
+						</ul>
+					</nav>
+				)}
+			</div>
+			<div className="search-section">
+				<Search
+					isOpen={isSearchOpen}
+					onClick={toggleSearch}
+					placeholder="찾고싶은 명함의 일련번호를 입력하세요"
+				/>
+			</div>
+			<div className="right-section">
+				<Button onClick={user ? handleLogout : handleGoogleLogin}>
+					{user ? (
+						<>
+							<FaSignOutAlt />
+							{!isMobile && ' 로그아웃'}
+						</>
+					) : (
+						<>
+							<FaSignInAlt />
+							{!isMobile && ' 로그인'}
+						</>
+					)}
+				</Button>
+
+				{!isMobile && (
+					<>
+						<ThemeSwitcher />
+					</>
+				)}
+			</div>
+			{/* 모바일 드롭다운 */}
+			{isMobile && isDrawerOpen && (
+				<Dropdown isOpen={isDrawerOpen} isMobile={isMobile}>
+					<ThemeSwitcher styles={{ width: '100%' }} />
+					{NAVITEM.map((item, index) => (
+						<div
+							key={index}
+							className="item"
+							onClick={() => {
+								handleNavigation(item.link);
+							}}
+						>
+							{item.title}
+						</div>
+					))}
+				</Dropdown>
+			)}
 		</HeaderStyle>
 	);
-};
+}
 
-const ThemeSwitcher = () => {
-	const { themeName, toggleTheme } = useContext(ThemeContext);
-	return (
-		<Button onClick={toggleTheme} scheme="secondary" boxShadow="none">
-			{themeName === 'light' ? <MdLightMode /> : <MdDarkMode />}
-		</Button>
-	);
-};
-
-const HeaderStyle = styled.header`
+const HeaderStyle = styled.header<{ $isSearchOpen: boolean }>`
 	width: 100%;
-	height: 3.5rem;
+	height: 4rem;
 	margin: 0 auto;
+	padding: 0 2.5rem;
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-evenly;
 	align-items: center;
-	padding: 0.2rem 1.2rem;
 	color: ${({ theme }) => theme.color.text};
 	background: ${({ theme }) => theme.color.blur};
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 -4px 10px rgba(0, 0, 0, 0.1);
 	gap: 1rem;
-`;
+	position: relative; /* 부모 요소를 기준으로 드롭다운이 제대로 렌더링되도록 설정 */
 
-const LeftContainer = styled.div`
-	display: flex;
-	align-items: center;
-	gap: 1.2rem;
-
-	.drawer {
-		display: none;
-
-		@media (max-width: 768px) {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			height: 100%;
-		}
-	}
-`;
-
-const Item = styled.div`
-	padding: 0.5rem;
-	cursor: pointer;
-	font-size: ${({ theme }) => theme.fontSize.small};
-	position: relative;
-
-	a {
-		color: ${({ theme }) => theme.color.text};
-		font-size: ${({ theme }) => theme.fontSize.small};
-		font-weight: bold;
-
-		&:hover {
-			color: ${({ theme }) => theme.color.primary};
-		}
-	}
-`;
-
-const Navigator = styled.nav`
-	display: flex;
-	gap: 1rem;
-
-	@media (max-width: 768px) {
-		display: none;
-	}
-`;
-
-const MoblieMenu = styled.nav`
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	position: absolute;
-	left: 0;
-	top: 3.5rem;
-	background: ${({ theme }) => theme.color.background};
-	width: 100%;
-	padding: 1rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	transform-origin: top;
-	transition: transform 0.3s ease, opacity 0.3s ease;
-	border-radius: 0 0 ${({ theme }) => theme.borderRadius.default} ${({ theme }) => theme.borderRadius.default};
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 -4px 10px rgba(0, 0, 0, 0.3);
-	z-index: 1000;
-
-	&.open {
-		transform: scaleY(1);
-		opacity: 1;
-		transition: transform 0.3s ease, opacity 1s ease;
-	}
-
-	&.closed {
-		transform: scaleY(0);
-		opacity: 0;
-		transition: transform 0.3s ease, opacity 1s ease;
-	}
-`;
-
-const Dropdown = styled.div`
-	position: absolute;
-	top: 100%;
-	left: 0;
-	background: ${({ theme }) => theme.color.surface};
-	padding: 0.5rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 2px -4px 6px rgba(0, 0, 0, 0.2);
-	border-radius: ${({ theme }) => theme.borderRadius.default};
-	z-index: 1000;
-
-	.item {
-		padding: 0.5rem;
-		border-radius: ${({ theme }) => theme.borderRadius.default};
-		cursor: pointer;
-
-		&:hover {
-			background: ${({ theme }) => theme.color.secondary};
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 2px -4px 6px rgba(0, 0, 0, 0.2);
-		}
-	}
-`;
-
-const RightContainer = styled.div`
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	gap: 1rem;
-
-	.hideOnMobile {
+	.left-section,
+	.right-section {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
 		gap: 1rem;
+
+		@media (max-width: 768px) {
+			display: ${({ $isSearchOpen }) => ($isSearchOpen ? 'none' : 'flex')};
+			opacity: ${({ $isSearchOpen }) => ($isSearchOpen ? 0 : 1)};
+			visibility: ${({ $isSearchOpen }) => ($isSearchOpen ? 'hidden' : 'visible')};
+			animation: ${({ $isSearchOpen }) => ($isSearchOpen ? 'slideOut' : 'slideIn')} 0.5s ease;
+			transition: opacity 0.5s ease, visibility 0.5s ease;
+			pointer-events: ${({ $isSearchOpen }) => ($isSearchOpen ? 'none' : 'auto')};
+		}
+	}
+
+	.left-section {
+		justify-content: flex-start;
+		transform-origin: left;
+	}
+
+	.right-section {
+		justify-content: flex-end;
+		transform-origin: right;
+	}
+
+	.search-section {
+		display: flex;
+		justify-content: center;
+		flex: 1;
+		width: auto;
+		max-width: ${({ theme }) => theme.maxWidth};
+	}
+
+	.navigation {
+		ul {
+			display: flex;
+			gap: 1.5rem;
+
+			li {
+				position: relative;
+
+				.nav-link {
+					font-size: ${({ theme }) => theme.fontSize.medium};
+					font-weight: 500;
+					color: ${({ theme }) => theme.color.text};
+					text-decoration: none;
+					transition: color 0.3s ease;
+
+					&.hover {
+						color: ${({ theme }) => theme.color.primary};
+					}
+				}
+			}
+		}
 
 		@media (max-width: 768px) {
 			display: none;
 		}
 	}
-`;
 
-const SearchContainer = styled.div<{ isOpen: boolean }>`
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	overflow: visible;
-	width: ${({ isOpen }) => (isOpen ? '15rem' : '5rem')};
-	transition: width 0.3s ease;
+	@media (max-width: 768px) {
+		padding: 0 1rem;
+	}
 
-	.searchInput {
-		width: ${({ isOpen }) => (isOpen ? '100%' : '0')};
-		padding: ${({ isOpen }) => (isOpen ? '0.5rem' : '0')};
-		opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
-		border: ${({ theme }) => `1px solid ${theme.color.secondary}`};
-		border-radius: ${({ theme }) => theme.borderRadius.default};
-		transition: opacity 0.3s ease, padding 0.3s ease;
+	@keyframes slideIn {
+		from {
+			transform: scaleX(0);
+		}
+		to {
+			transform: scaleX(1);
+		}
+	}
+
+	@keyframes slideOut {
+		from {
+			transform: scaleX(1);
+		}
+		to {
+			transform: scaleX(0);
+		}
 	}
 `;
 
