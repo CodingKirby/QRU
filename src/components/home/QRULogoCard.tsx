@@ -1,11 +1,13 @@
-import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 import { FaPlus } from 'react-icons/fa';
 import Button from '../common/Button';
-import { css } from 'styled-components';
 
 function QRULogo() {
-	const handleCreateCard = () => {
-		alert('나만의 명함 만들러 가기 클릭!');
+	// 네비게이션 이동
+	const navigate = useNavigate();
+	const handleNavigation = (link: string) => {
+		navigate(link);
 	};
 
 	return (
@@ -33,7 +35,7 @@ function QRULogo() {
 			</div>
 			<div className="footer">
 				<Button
-					onClick={handleCreateCard}
+					onClick={() => handleNavigation('/card')}
 					size="extraLarge"
 					scheme="primary"
 					icon={<FaPlus />}
