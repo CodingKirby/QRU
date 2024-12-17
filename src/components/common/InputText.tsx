@@ -14,11 +14,14 @@ const InputText = React.forwardRef(
 
 const InputTextStyle = styled.input`
 	padding: 0.25rem 0.75rem;
-	border: 1px solid ${({ theme }) => theme.color.secondaryVariant};
+	outline: none;
+	border: none;
+	box-shadow: ${({ theme }) => theme.shadow.light};
+	overflow: visible;
+
 	border-radius: ${({ theme }) => theme.borderRadius.default};
-	font-size: 1rem;
+	font-size: ${({ theme }) => theme.fontSize.extraSmall};
 	line-height: 1.5;
-	color: ${({ theme }) => theme.color.text};
 `;
 
 export default InputText;
