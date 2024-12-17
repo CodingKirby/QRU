@@ -13,11 +13,11 @@ const Footer = () => {
 				<a href="#">Contact</a>
 			</div>
 			<div className="socialIcons">
-				<a href="https://github.com/CodingKirby/QRU" target="_blank" rel="noopener noreferrer">
+				<a href="https://github.com/CodingKirby/QRU" target="_blank">
 					<FaGithub />
 				</a>
 			</div>
-			<p>© 2024 QRU. All Rights Reserved.</p>
+			<p>© 2024 CodingKirby. All Rights Reserved.</p>
 		</FooterStyle>
 	);
 };
