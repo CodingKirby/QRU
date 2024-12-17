@@ -16,7 +16,7 @@ import ThemeSwitcher from "../header/ThemeSwitcher";
 import Drawer from "../header/Drawer";
 import Dropdown from "../header/Dropdown";
 import Search from "../header/Search";
-import { FaGoogle, FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 
 // 네비게이션 아이템
 const NAVITEM = [
