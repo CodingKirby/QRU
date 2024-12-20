@@ -1,74 +1,95 @@
-import { styled } from 'styled-components';
-import { FaSearch } from 'react-icons/fa';
-import Button from '../common/Button';
-import InputText from '../common/InputText';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from "react";
+import { styled } from "styled-components";
+import { FaSearch } from "react-icons/fa";
+import Button from "../common/Button";
+import InputText from "../common/InputText";
 
 interface Props {
-	isOpen: boolean;
-	onClick: () => void;
-	placeholder?: string;
+  isOpen: boolean;
+  onToggle: (open: boolean) => void;
+  placeholder?: string;
+  onSearch?: (query: string) => void;
 }
 
-function Search({ isOpen, onClick, placeholder }: Props) {
-	const [inputValue, setInputValue] = useState('');
-	const inputRef = useRef<HTMLInputElement>(null); // input 요소에 접근하기 위한 ref
+function Search({ isOpen, onToggle, placeholder, onSearch }: Props) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-	// isOpen이 true일 때 input에 포커스를 줌
-	useEffect(() => {
-		if (isOpen && inputRef.current) {
-			inputRef.current.focus();
-		}
-	}, [isOpen]);
+  // 검색창 열리면 input에 포커스
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
 
-	const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-		// 버튼을 눌렀을 때 발생한 onBlur 이벤트를 무시
-		if (event.relatedTarget && event.relatedTarget.tagName === 'BUTTON') {
-			return;
-		}
-		onClick();
-		setInputValue(''); // input 내용 초기화
-	};
+  // 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        onToggle(false); // 검색창 닫기
+      }
+    };
 
-	return (
-		<SearchStyle $open={isOpen}>
-			<InputText
-				ref={inputRef}
-				type="text"
-				placeholder={placeholder}
-				value={inputValue}
-				onChange={(e) => setInputValue(e.target.value)}
-				onBlur={handleBlur}
-			/>
-			<Button onClick={onClick}>
-				<FaSearch />
-			</Button>
-		</SearchStyle>
-	);
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onToggle]);
+
+  const handleToggle = (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (isOpen && inputRef.current?.value) {
+      // 입력값이 있으면 검색 실행
+      onSearch?.(inputRef.current.value);
+    } else {
+      // 검색창 열기/닫기
+      onToggle(!isOpen);
+      if (!isOpen && inputRef.current) {
+        inputRef.current.value = ""; // 닫힐 때 입력값 초기화
+      }
+    }
+  };
+
+  return (
+    <SearchStyle ref={containerRef} $open={isOpen}>
+      <InputText ref={inputRef} type="text" placeholder={placeholder} />
+      <Button onMouseDown={handleToggle}>
+        <FaSearch />
+      </Button>
+    </SearchStyle>
+  );
 }
 
-interface DropdownStyleProps {
-	$open: boolean;
+interface StyleProps {
+  $open: boolean;
 }
 
-const SearchStyle = styled.div<DropdownStyleProps>`
-	display: inline-flex;
-	justify-content: flex-end;
-	align-items: center;
-	flex: 1;
-	width: ${({ $open }) => ($open ? '100%' : '5rem')};
-	overflow: visible;
-	transition: width 1s ease;
-	gap: 0.5rem;
+const SearchStyle = styled.div<StyleProps>`
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+  align-items: center;
+  width: ${({ $open }) => ($open ? "100%" : "5rem")};
 
-	input {
-		padding: 0.5rem 1rem;
-		width: ${({ $open }) => ($open ? '100%' : '0')};
-		opacity: ${({ $open }) => ($open ? 1 : 0)};
-		transform-origin: right;
-		transition: width 1s ease, opacity 0.3s ease;
-		pointer-events: ${({ $open }) => ($open ? 'auto' : 'none')};
-	}
+  overflow: visible;
+  transition: width 1s ease;
+  gap: 0.5rem;
+
+  input {
+    padding: 0.5rem 1rem;
+    width: ${({ $open }) => ($open ? "100%" : "0")};
+    max-width: ${({ theme }) => theme.layout.width.medium};
+    opacity: ${({ $open }) => ($open ? 1 : 0)};
+    transform-origin: right;
+    transition: width 1s ease, opacity 1s ease;
+    pointer-events: ${({ $open }) => ($open ? "auto" : "none")};
+  }
 `;
 
 export default Search;
