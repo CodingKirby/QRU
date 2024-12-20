@@ -26,9 +26,9 @@ const Content = styled.main`
   width: 100%;
   margin: 0 auto;
   max-width: ${({ theme }) => theme.layout.width.large};
-  padding: 4rem 2rem;
+  padding: 6rem 2rem;
   @media screen AND ${({ theme }) => theme.mediaQuery.mobile} {
-    padding: 4rem 1rem;
+    padding: 6rem 1rem;
   }
 `;
 
