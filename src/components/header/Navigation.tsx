@@ -1,7 +1,7 @@
 import Dropdown from "../common/Dropdown";
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
-import { NAVIGATION } from "../../data/NavigationItems";
+import { NAVIGATION } from "../../data/navigationItems";
 
 function Navigation() {
   return (
