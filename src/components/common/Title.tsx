@@ -20,6 +20,7 @@ const TitleStyle = styled.h1<Omit<Props, "children">>`
   color: ${({ theme, color }) =>
     color ? theme.color[color] : theme.color.text};
   transition: color 0.3s ease;
+  margin: 0;
 `;
 
 export default Title;
