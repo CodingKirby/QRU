@@ -249,6 +249,35 @@ const CardForm = ({ isOpen }: Props) => {
         return null;
       }
 
+      if ("options" in config) {
+        return (
+          <div key={`${key}-selector-field`} className="selector-field-group">
+            <Selector
+              id={key}
+              name={key}
+              label={config.label}
+              value={config.value as string}
+              options={config.options.map((option: string) => ({
+                label: option,
+                value: option,
+              }))}
+              onChange={(value: string) =>
+                handleChange({
+                  target: { name: key, value },
+                } as React.ChangeEvent<HTMLInputElement>)
+              }
+              placeholder={config.label}
+            />
+            <InputCheck
+              size="extraLarge"
+              label={"공개"}
+              checked={config.isPublic}
+              onChange={() => handleVisibilityChange(key as keyof CardFormT)}
+            />
+          </div>
+        );
+      }
+
       if (key === "birth") {
         return (
           <div key={`${key}-required`} className="date-field-group">
@@ -577,7 +606,6 @@ export const CardFormStyle = styled.div`
     border-radius: ${({ theme }) => theme.borderRadius.default};
     background: ${({ theme }) => theme.color.blur};
     padding: 1rem;
-    box-shadow: inset 4px -4px 4px rgba(0, 0, 0, 0.3);
 
     .field-group {
       display: flex;
