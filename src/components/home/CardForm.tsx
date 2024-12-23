@@ -249,35 +249,6 @@ const CardForm = ({ isOpen }: Props) => {
         return null;
       }
 
-      if ("options" in config) {
-        return (
-          <div key={`${key}-selector-field`} className="selector-field-group">
-            <Selector
-              id={key}
-              name={key}
-              label={config.label}
-              value={config.value as string}
-              options={config.options.map((option: string) => ({
-                label: option,
-                value: option,
-              }))}
-              onChange={(value: string) =>
-                handleChange({
-                  target: { name: key, value },
-                } as React.ChangeEvent<HTMLInputElement>)
-              }
-              placeholder={config.label}
-            />
-            <InputCheck
-              size="extraLarge"
-              label={"공개"}
-              checked={config.isPublic}
-              onChange={() => handleVisibilityChange(key as keyof CardFormT)}
-            />
-          </div>
-        );
-      }
-
       if (key === "birth") {
         return (
           <div key={`${key}-required`} className="date-field-group">
@@ -388,6 +359,7 @@ const CardForm = ({ isOpen }: Props) => {
                 {snsCustomPlatform === "기타" && (
                   <InputText
                     name={`${key}-customPlatform`}
+                    label="기타 플랫폼"
                     placeholder="플랫폼 이름 입력"
                     value={formData.sns.otherOption}
                     onChange={(e) =>
@@ -556,12 +528,17 @@ const CardForm = ({ isOpen }: Props) => {
       </div>
       <div className="form-content">
         <Title size="small">* 다음 항목은 필수 입력 항목입니다.</Title>
-        <form>{renderRequiredFields()}</form>
+        <form className="required">{renderRequiredFields()}</form>
         <hr />
         <Title size="small">* 다음 항목은 선택 입력 항목입니다.</Title>
-        <form>{renderPreparedFields()}</form>
-        <Title size="small">추가 정보</Title>
-        <form>{renderCustomFields()}</form>
+        <form className="prepared">{renderPreparedFields()}</form>
+        {formData.customFields.value.length != 0 && (
+          <>
+            <hr />
+            <Title size="small">* 다음 항목은 추가 입력 항목입니다.</Title>
+            <form className="custom">{renderCustomFields()}</form>
+          </>
+        )}
       </div>
     </CardFormStyle>
   );
@@ -594,27 +571,30 @@ export const CardFormStyle = styled.div`
     flex-direction: column;
     overflow: visible;
     gap: 0.5rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2.5rem;
     transition: all 0.1s ease;
+
+    border-radius: ${({ theme }) => theme.borderRadius.default};
+    background: ${({ theme }) => theme.color.blur};
+    padding: 1rem;
+    box-shadow: inset 4px -4px 4px rgba(0, 0, 0, 0.3);
 
     .field-group {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      align-items: center;
+      align-items: end;
 
       &.other {
+        display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: flex-start;
         gap: 0.25rem;
+        background: ${({ theme }) => theme.color.blur};
+        padding: 1rem;
+        border-radius: ${({ theme }) => theme.borderRadius.default};
+        box-shadow: ${({ theme }) => theme.shadow.light};
       }
-    }
-
-    label {
-      grid-area: label;
-      font-size: ${({ theme }) => theme.fontSize.extraSmall};
     }
 
     .input-text {
@@ -622,12 +602,20 @@ export const CardFormStyle = styled.div`
       display: grid;
       grid-area: inputText;
       grid-template-areas: "label" "input";
-      grid-template-rows: auto 1fr;
-      column-gap: 0.5rem;
-      row-gap: 0.25rem;
+      grid-template-rows: auto auto;
+
+      label {
+        grid-area: label;
+        font-size: ${({ theme }) => theme.fontSize.extraSmall};
+        margin-left: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
 
       input {
         grid-area: input;
+        width: 100%;
       }
     }
 
@@ -635,12 +623,21 @@ export const CardFormStyle = styled.div`
       grid-area: inputCheck;
       display: grid;
       grid-template-areas: "label" "input";
-      grid-template-rows: 1fr 2fr;
+      grid-template-rows: auto auto;
       column-gap: 0.5rem;
       row-gap: 0.25rem;
 
+      label {
+        grid-area: label;
+        font-size: ${({ theme }) => theme.fontSize.extraSmall};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       input {
         grid-area: input;
+        width: 100%;
       }
     }
 
@@ -649,8 +646,16 @@ export const CardFormStyle = styled.div`
 
       label {
         grid-area: label;
-        margin-left: 0.5rem;
+        margin-left: 1rem;
         font-size: ${({ theme }) => theme.fontSize.extraSmall};
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      input {
+        grid-area: input;
+        width: 100%;
       }
     }
 

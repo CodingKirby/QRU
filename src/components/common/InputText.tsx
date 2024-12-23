@@ -45,6 +45,7 @@ const InputTextStyle = styled.div`
   input {
     display: flex;
     width: 100%;
+    height: fit-content;
     border: none;
     outline: none;
     box-shadow: ${({ theme }) => theme.shadow.light};
