@@ -1,9 +1,9 @@
 // Header.tsx
 import styled from "styled-components";
-import QRULogo from "./Logo";
-import Loading from "./Loading";
-import Button from "./Button";
-import Dropdown from "./Dropdown";
+import QRULogo from "../common/Logo";
+import Loading from "../common/Loading";
+import Button from "../common/Button";
+import Dropdown from "../common/Dropdown";
 import Navigation from "../header/Navigation";
 import ThemeSwitcher from "../header/ThemeSwitcher";
 import Drawer from "../header/Drawer";
@@ -73,7 +73,7 @@ function Header() {
               <>
                 <Button onClick={isLoggedIn ? handleLogout : handleGoogleLogin}>
                   <FaGoogle />
-                  로그인
+                  {!isMobileOpen && "로그인"}
                 </Button>
                 {!isMobileOpen && <ThemeSwitcher />}
               </>
@@ -112,7 +112,9 @@ const HeaderStyle = styled.header<Props>`
     gap: 1rem;
 
     @media (max-width: 768px) {
-      width: ${({ $isSearchOpen }) => ($isSearchOpen ? "0" : "")};
+      visibility: ${({ $isSearchOpen }) =>
+        $isSearchOpen ? "hidden" : "visible"};
+      width: ${({ $isSearchOpen }) => ($isSearchOpen ? "0" : "fit-content")};
       opacity: ${({ $isSearchOpen }) => ($isSearchOpen ? 0 : 1)};
       transform: ${({ $isSearchOpen }) =>
         $isSearchOpen ? "scaleX(0)" : "scaleX(1)"};
@@ -126,7 +128,7 @@ const HeaderStyle = styled.header<Props>`
     justify-content: flex-start;
     transform-origin: left;
 
-    .navigation {
+    ul {
       visibility: ${({ $isSearchOpen }) =>
         $isSearchOpen ? "hidden" : "visible"};
       width: ${({ $isSearchOpen }) => ($isSearchOpen ? "0" : "auto")};
@@ -134,7 +136,7 @@ const HeaderStyle = styled.header<Props>`
       transform: ${({ $isSearchOpen }) =>
         $isSearchOpen ? "scaleX(0)" : "scaleX(1)"};
       opacity: ${({ $isSearchOpen }) => ($isSearchOpen ? 0 : 1)};
-      transition: width 1s ease, transform 0.3s ease, opacity 0.3s ease;
+      transition: all 0.5s ease;
     }
   }
 
@@ -147,43 +149,7 @@ const HeaderStyle = styled.header<Props>`
       height: 2.5em;
       border-radius: 50%;
       object-fit: cover;
-    }
-
-    .auth {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      cursor: pointer;
-
-      ul {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        width: 100px;
-
-        li {
-          a,
-          button {
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
-            align-item: center;
-            justify-content: center;
-            width: 100%;
-            line-height: 1;
-            background: none;
-            border: 0;
-            cursor: pointer;
-
-            svg {
-              margin-right: 6px;
-            }
-          }
-        }
-      }
+      box-shadow: ${({ theme }) => theme.shadow.default};
     }
   }
 

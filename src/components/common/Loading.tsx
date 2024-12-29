@@ -7,13 +7,13 @@ interface Props {
 
 function Loading({ size }: Props) {
   return (
-    <LoadingStyle $size={size}>
+    <StyledLoading $size={size}>
       <FaSpinner />
-    </LoadingStyle>
+    </StyledLoading>
   );
 }
 
-const LoadingStyle = styled.div<{ $size?: string }>`
+const StyledLoading = styled.div<{ $size?: string }>`
   padding: ${({ $size }) => ($size ? "0" : "2rem")} 0;
   text-align: center;
 

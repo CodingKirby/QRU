@@ -1,11 +1,14 @@
 import styled, { css } from "styled-components";
 import { FaPlus } from "react-icons/fa";
 import Button from "../common/Button";
-import { Link } from "react-router-dom";
 
-function QRULogo() {
+interface Props {
+  onClick: () => void;
+}
+
+function LogoCard({ onClick }: Props) {
   return (
-    <LogoCard>
+    <StyledLogoCard>
       <div className="content">
         <QRBox>
           <div></div>
@@ -28,22 +31,21 @@ function QRULogo() {
         </TextBox>
       </div>
       <div className="footer">
-        <Link to="/cards">
-          <Button
-            size="extraLarge"
-            scheme="primary"
-            icon={<FaPlus />}
-            styles={extraButtonStyles}
-          >
-            나만의 명함 만들러 가기
-          </Button>
-        </Link>
+        <Button
+          size="extraLarge"
+          scheme="primary"
+          icon={<FaPlus />}
+          styles={extraButtonStyles}
+          onClick={onClick}
+        >
+          나만의 명함 만들기
+        </Button>
       </div>
-    </LogoCard>
+    </StyledLogoCard>
   );
 }
 
-const LogoCard = styled.div`
+const StyledLogoCard = styled.div`
   width: 70%;
   min-width: 300px;
   max-width: ${({ theme }) => theme.layout.width.large};
@@ -93,9 +95,9 @@ const LogoCard = styled.div`
 
   .footer {
     width: 100%;
-    height: 20%;
     display: flex;
     justify-content: center;
+    align-items: center;
     cursor: pointer;
   }
 `;
@@ -174,8 +176,9 @@ const TextBox = styled.div`
 
 const extraButtonStyles = css`
   width: 100%;
-  font-size: clamp(1rem, 3vw, 3rem);
-  padding: clamp(0.5rem, 2vw, 2rem);
+  max-height: clamp(3rem, 8vw, 5rem);
+  font-size: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(1rem, 2vw, 3rem);
   gap: clamp(0.5rem, 2vw, 2rem);
 
   .buttonIcon {
@@ -198,4 +201,4 @@ const extraButtonStyles = css`
   }
 `;
 
-export default QRULogo;
+export default LogoCard;

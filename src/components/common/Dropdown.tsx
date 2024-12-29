@@ -18,8 +18,6 @@ function Dropdown({
   const [open, setOpen] = useState(isOpen);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  console.log("open", isOpen);
-
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
       if (
@@ -38,7 +36,7 @@ function Dropdown({
   }, [dropdownRef]);
 
   return (
-    <DropdownStyle $open={open} ref={dropdownRef} className={`${className}`}>
+    <StyledDropdown $open={open} ref={dropdownRef} className={`${className}`}>
       <div onClick={() => setOpen(!open)}>
         {toggleButton &&
           React.cloneElement(toggleButton as React.ReactElement, {
@@ -48,7 +46,7 @@ function Dropdown({
       <div className="panel" onClick={() => setOpen(false)}>
         {children}
       </div>
-    </DropdownStyle>
+    </StyledDropdown>
   );
 }
 
@@ -56,7 +54,7 @@ interface StyleProps {
   $open: boolean;
 }
 
-const DropdownStyle = styled.div<StyleProps>`
+const StyledDropdown = styled.div<StyleProps>`
   position: relative;
   cursor: pointer;
 
@@ -79,6 +77,7 @@ const DropdownStyle = styled.div<StyleProps>`
       display: flex;
       flex-direction: column;
       justify-content: center;
+      line-height: 1.8;
 
       width: auto;
       height: auto;
@@ -104,8 +103,8 @@ const DropdownStyle = styled.div<StyleProps>`
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 0.8rem 1.2rem;
-        line-height: 1.5;
+        padding: 0.5rem 1.2rem;
+        line-height: 1.8;
 
         color: ${({ theme }) => theme.color.text};
         border-radius: ${({ theme }) => theme.borderRadius.default};
@@ -149,13 +148,13 @@ const DropdownStyle = styled.div<StyleProps>`
         align-items: center;
         width: 100%;
         height: auto;
-        line-height: 2;
         border-radius: ${({ theme }) => theme.borderRadius.default};
         cursor: pointer;
 
         color: ${({ theme }) => theme.color.text};
         font-size: ${({ theme }) => theme.fontSize.medium};
         padding: 0.5rem 1rem;
+        line-height: 1.8;
 
         &:hover {
           background: ${({ theme }) => theme.color.blur};

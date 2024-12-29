@@ -1,35 +1,43 @@
-import { Link } from "react-router-dom";
-import { NAVIGATION } from "../../data/navigationItems";
+import { ISubItem } from "../../types/navigationType";
+import { NAVIGATION } from "../../data/navigation";
 import Dropdown from "../common/Dropdown";
 import { styled } from "styled-components";
+import { HashLink } from "react-router-hash-link";
 
 function Navigation() {
   return (
-    <NavigationStyle>
+    <StyledNavigation>
       <ul>
         {NAVIGATION.map((item, index) => (
           <li key={index}>
-            <Link to={item.link}>{item.title}</Link>
+            <HashLink smooth to={item.link}>
+              {item.title}
+            </HashLink>
             {item.subItems && (
               <Dropdown className="navigation-dropdown">
-                {item.subItems.map((subItem, subIndex) => (
-                  <Link to={subItem.link} key={subIndex} className="item">
+                {item.subItems.map((subItem: ISubItem, subIndex: number) => (
+                  <HashLink
+                    smooth
+                    to={subItem.link}
+                    key={subIndex}
+                    className="item"
+                  >
                     {subItem.title}
-                  </Link>
+                  </HashLink>
                 ))}
               </Dropdown>
             )}
           </li>
         ))}
       </ul>
-    </NavigationStyle>
+    </StyledNavigation>
   );
 }
 
-const NavigationStyle = styled.nav`
+const StyledNavigation = styled.nav`
   ul {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     white-space: nowrap;
 
     li {

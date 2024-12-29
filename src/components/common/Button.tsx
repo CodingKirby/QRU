@@ -1,17 +1,17 @@
-import styled from "styled-components";
+import styled, { CSSProp } from "styled-components";
 import { ButtonScheme, ButtonSize, Shadow } from "../../styles/theme";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;
-
   icon?: React.ReactNode;
   size?: ButtonSize;
   scheme?: ButtonScheme;
   boxShadow?: Shadow;
   disabled?: boolean;
   isLoading?: boolean;
-  styles?: string;
+  styles?: string | CSSProp;
+  tooltip?: string;
 }
 
 function Button({
@@ -23,31 +23,37 @@ function Button({
   boxShadow,
   disabled,
   isLoading,
+  tooltip,
   ...props
 }: Props) {
   return (
-    <ButtonStyle
+    <StyledButton
       ref={ref}
       size={size}
       scheme={scheme}
       boxShadow={boxShadow}
       disabled={disabled}
       isLoading={isLoading}
+      data-tooltip={tooltip}
       {...props}
     >
       {icon && <div className="icon">{icon}</div>}
       {children}
-    </ButtonStyle>
+    </StyledButton>
   );
 }
 
-export const ButtonStyle = styled.button<Omit<Props, "children" | "icon">>`
+export const StyledButton = styled.button.withConfig({
+  shouldForwardProp: (prop) =>
+    !["isLoading", "styles", "boxShadow"].includes(prop),
+})<Omit<Props, "children" | "icon">>`
+  position: relative;
   min-height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
   flex-shrink: 0;
+  line-height: 1;
 
   font-size: ${({ theme, size }) =>
     size ? theme.button[size].fontSize : theme.button.medium.fontSize};
@@ -73,22 +79,67 @@ export const ButtonStyle = styled.button<Omit<Props, "children" | "icon">>`
   cursor: ${({ disabled }) => (disabled ? "none" : "pointer")};
 
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  -webkit-tap-highlight-color: transparent; /* 모바일 터치 하이라이트 제거 */
+  -webkit-tap-highlight-color: transparent;
+
+  svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(
+      ${({ theme, size }) =>
+          size ? theme.button[size].fontSize : theme.button.medium.fontSize} *
+        1.8
+    );
+    aspect-ratio: 1/1;
+  }
 
   .icon {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: ${({ theme, size }) =>
-      size ? theme.button[size].fontSize : theme.button.medium.fontSize};
+      size ? theme.button[size].fontSize : theme.button.small.fontSize};
   }
 
   &:hover {
     background: ${({ theme }) => theme.color.blur};
     box-shadow: ${({ theme }) => theme.shadow.default};
+  }
+
+  &[data-tooltip]:hover::after,
+  &[data-tooltip]:focus::after {
+    width: max-content;
+    max-width: 25rem;
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-top: 0.5rem;
+    padding: 1rem 1.5rem;
+
+    line-height: 1.8;
+    white-space: break-spaces;
+    text-align: left;
+
+    background: ${({ theme }) => theme.color.error};
+    color: ${({ theme }) => theme.color.onError};
+    font-size: ${({ theme }) => theme.fontSize.extraSmall};
+    border-radius: ${({ theme }) => theme.borderRadius.default};
+    box-shadow: ${({ theme }) => theme.shadow.default};
+
+    z-index: 2000;
+    opacity: 1;
+    transform: scaleY(1);
+    transition: all 0.3s ease;
+  }
+
+  &[data-tooltip]::after {
+    pointer-events: none;
+    opacity: 0;
+    transform-origin: top;
+    transform: scaleY(0);
   }
 
   ${({ styles }) => styles || ""}

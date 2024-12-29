@@ -9,9 +9,16 @@ interface Props {
   onToggle: (open: boolean) => void;
   placeholder?: string;
   onSearch?: (query: string) => void;
+  onNavigationToggle?: (open: boolean) => void;
 }
 
-function Search({ isOpen, onToggle, placeholder, onSearch }: Props) {
+function Search({
+  isOpen,
+  onToggle,
+  placeholder,
+  onSearch,
+  onNavigationToggle,
+}: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -42,6 +49,28 @@ function Search({ isOpen, onToggle, placeholder, onSearch }: Props) {
     };
   }, [isOpen, onToggle]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const searchWidth = inputRef.current?.offsetWidth || 0;
+      const maxWidth = parseInt(
+        getComputedStyle(inputRef.current!).maxWidth || "0",
+        10
+      );
+
+      // InputText의 너비가 최대값에 도달하면 Navigation 닫기
+      if (searchWidth >= maxWidth && onNavigationToggle) {
+        onNavigationToggle(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // 초기화 시 체크
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [onNavigationToggle]);
+
   const handleToggle = (event: React.MouseEvent) => {
     event.preventDefault();
     if (isOpen && inputRef.current?.value) {
@@ -57,12 +86,17 @@ function Search({ isOpen, onToggle, placeholder, onSearch }: Props) {
   };
 
   return (
-    <SearchStyle ref={containerRef} $open={isOpen}>
-      <InputText ref={inputRef} type="text" placeholder={placeholder} />
+    <StyledSearch className="search" ref={containerRef} $open={isOpen}>
+      <InputText
+        className="search-input"
+        ref={inputRef}
+        type="text"
+        placeholder={placeholder}
+      />
       <Button onMouseDown={handleToggle}>
         <FaSearch />
       </Button>
-    </SearchStyle>
+    </StyledSearch>
   );
 }
 
@@ -70,25 +104,30 @@ interface StyleProps {
   $open: boolean;
 }
 
-const SearchStyle = styled.div<StyleProps>`
+const StyledSearch = styled.div<StyleProps>`
   display: flex;
-  flex-grow: 1;
+  flex: 1;
+  width: 100%;
   justify-content: flex-end;
   align-items: center;
-  width: ${({ $open }) => ($open ? "100%" : "5rem")};
 
   overflow: visible;
   transition: width 1s ease;
   gap: 0.5rem;
 
-  input {
+  .search-input {
     padding: 0.5rem 1rem;
     width: ${({ $open }) => ($open ? "100%" : "0")};
-    max-width: ${({ theme }) => theme.layout.width.medium};
     opacity: ${({ $open }) => ($open ? 1 : 0)};
-    transform-origin: right;
-    transition: width 1s ease, opacity 1s ease;
+    transform-origin: right center;
+    transform: ${({ $open }) => ($open ? "scaleX(1)" : "scaleX(0)")};
+    transition: transform 0.3s ease, opacity 0.3s ease;
     pointer-events: ${({ $open }) => ($open ? "auto" : "none")};
+  }
+
+  @media screen and ${({ theme }) => theme.mediaQuery.mobile} {
+    width: ${({ $open }) => ($open ? "100%" : "0")};
+    transition: width 0.3s ease;
   }
 `;
 

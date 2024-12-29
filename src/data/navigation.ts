@@ -1,17 +1,17 @@
-import { Navigation } from "../models/navigation.model";
+import { INavigation } from "../types/navigationType";
 
-export const NAVIGATION: Navigation[] = [
+export const NAVIGATION: INavigation[] = [
   {
     title: "서비스 소개",
-    link: "/about",
+    link: "/#home-about",
     subItems: [
       {
         title: "어떤 서비스인가요?",
-        link: "/about",
+        link: "/#home-about-intro",
       },
       {
         title: "어떻게 사용하나요?",
-        link: "/about",
+        link: "/#home-about-usage",
       },
     ],
   },
