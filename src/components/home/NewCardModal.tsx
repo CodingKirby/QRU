@@ -126,9 +126,19 @@ function NewCardModal() {
               ...FORM_FIELDS,
               ...customFields.map((field) => ({
                 ...field,
+                required: true,
                 label: "추가 정보",
                 type: "custom" as FieldType,
-                required: true,
+                options: [
+                  { label: "전화번호", value: "phone" },
+                  { label: "직업", value: "job" },
+                  { label: "소속 (학교/직장)", value: "belong" },
+                  { label: "(집/직장) 주소", value: "address" },
+                  { label: "웹사이트", value: "website" },
+                  { label: "잘하는 것", value: "strengths" },
+                  { label: "못하는 것", value: "weaknesses" },
+                  { label: "직접 입력", value: "self" },
+                ],
               })),
             ]}
             onSubmit={handleSubmit}

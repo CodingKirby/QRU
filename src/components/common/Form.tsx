@@ -140,7 +140,7 @@ const Form: React.FC<Props> = ({ fields, onSubmit, onCustomFieldRemove }) => {
             <InputSelect
               name={field.id}
               value={formData[field.id]}
-              options={field.options}
+              options={field.options || []}
               onChange={(value) => handleFieldChange(field.id, value)}
               placeholder={field.placeholder}
               onBlur={() => handleBlur(field.id)}
@@ -163,16 +163,26 @@ const Form: React.FC<Props> = ({ fields, onSubmit, onCustomFieldRemove }) => {
           />
         ) : field.type === "custom" ? (
           <>
-            <InputText
-              placeholder={"항목 이름"}
-              value={formData[`${field.id}_label`] || ""}
-              onChange={(e) =>
-                handleFieldChange(`${field.id}_label`, e.target.value)
-              }
+            <InputSelect
+              name={field.id}
+              value={formData[field.id]}
+              options={field.options || []}
+              onChange={(value) => handleFieldChange(field.id, value)}
+              placeholder={field.placeholder}
               onBlur={() => handleBlur(field.id)}
             />
+            {formData[field.id] === "self" && (
+              <InputText
+                placeholder={`${field.label} 제목 입력`}
+                value={formData[`${field.id}_self`] || ""}
+                onChange={(e) =>
+                  handleFieldChange(`${field.id}_self`, e.target.value)
+                }
+                onBlur={() => handleBlur(`${field.id}_self`)}
+              />
+            )}
             <InputText
-              placeholder={"항목 내용"}
+              placeholder={`${field.label} 내용 입력`}
               value={formData[`${field.id}_value`] || ""}
               onChange={(e) =>
                 handleFieldChange(`${field.id}_value`, e.target.value)

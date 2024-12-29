@@ -103,8 +103,20 @@ export const FORM_FIELDS: IFormField[] = [
   {
     required: false,
     id: "hobby",
-    label: "취미",
+    label: "취미/관심사",
     type: "text",
     placeholder: "취미를 입력하세요.",
+  },
+  {
+    id: "likes",
+    label: "좋아하는 것",
+    type: "text",
+    placeholder: "좋아하는 것을 입력하세요.",
+  },
+  {
+    id: "dislikes",
+    label: "싫어하는 것",
+    type: "text",
+    placeholder: "싫어하는 것을 입력하세요.",
   },
 ];
