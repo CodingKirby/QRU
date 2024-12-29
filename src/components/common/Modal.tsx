@@ -2,10 +2,9 @@ import styled from "styled-components";
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { IoClose } from "react-icons/io5";
-import { CardFormStyle } from "../home/CardForm";
 
 interface Props {
-  children: Array<React.ReactNode>;
+  children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -14,9 +13,6 @@ function Modal({ children, isOpen, onClose }: Props) {
   const [isAnimating, setIsAnimating] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const previousFocusedElement = useRef<HTMLElement | null>(null);
-
-  const header = children[0];
-  const content = children[1];
 
   const handleClose = () => {
     setIsAnimating(true);
@@ -64,32 +60,27 @@ function Modal({ children, isOpen, onClose }: Props) {
   if (!isOpen && !isAnimating) return null;
 
   return createPortal(
-    <ModalStyle
+    <StyledModal
       className={isAnimating ? "fade-out" : "fade-in"}
       onClick={handleOverlayClick}
       onAnimationEnd={handleAnimationEnd}
     >
       <div className="modal-body" ref={modalRef} role="dialog" tabIndex={-1}>
-        <div className="modal-header">
-          <button
-            className="modal-close"
-            onClick={handleClose}
-            aria-label="Close modal"
-          >
-            <IoClose />
-          </button>
-          <CardFormStyle>{header}</CardFormStyle>
-        </div>
-        <div className="modal-contents">
-          <CardFormStyle>{content}</CardFormStyle>
-        </div>
+        <div className="modal-contents">{children}</div>
+        <button
+          className="modal-close"
+          onClick={handleClose}
+          aria-label="Close modal"
+        >
+          <IoClose />
+        </button>
       </div>
-    </ModalStyle>,
+    </StyledModal>,
     document.body
   );
 }
 
-const ModalStyle = styled.div`
+const StyledModal = styled.div`
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -156,28 +147,12 @@ const ModalStyle = styled.div`
     max-height: 80vh;
     display: flex;
     flex-direction: column;
-    overflow: clip;
-  }
-
-  .modal-header {
-    position: sticky;
-    top: 0;
-    left: 0;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: left;
-    padding: 1rem 2rem;
-    gap: 0.5rem;
-    z-index: 1000;
   }
 
   .modal-contents {
     display: flex;
     border-radius: ${({ theme }) => theme.borderRadius.default || "8px"};
-    overflow-y: auto;
-    padding: 2rem;
+    overflow: hidden;
   }
 
   .modal-close {

@@ -18,8 +18,6 @@ function Dropdown({
   const [open, setOpen] = useState(isOpen);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  console.log("open", isOpen);
-
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
       if (
@@ -38,7 +36,7 @@ function Dropdown({
   }, [dropdownRef]);
 
   return (
-    <DropdownStyle $open={open} ref={dropdownRef} className={`${className}`}>
+    <StyledDropdown $open={open} ref={dropdownRef} className={`${className}`}>
       <div onClick={() => setOpen(!open)}>
         {toggleButton &&
           React.cloneElement(toggleButton as React.ReactElement, {
@@ -48,7 +46,7 @@ function Dropdown({
       <div className="panel" onClick={() => setOpen(false)}>
         {children}
       </div>
-    </DropdownStyle>
+    </StyledDropdown>
   );
 }
 
@@ -56,7 +54,7 @@ interface StyleProps {
   $open: boolean;
 }
 
-const DropdownStyle = styled.div<StyleProps>`
+const StyledDropdown = styled.div<StyleProps>`
   position: relative;
   cursor: pointer;
 

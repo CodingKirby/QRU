@@ -4,7 +4,7 @@ import QRULogo from "../common/Logo";
 
 const Footer = () => {
   return (
-    <FooterStyle>
+    <StyledFooter>
       <QRULogo size="large" color="primary" />
       <div className="footerMenu">
         <a href="#">About</a>
@@ -18,11 +18,11 @@ const Footer = () => {
         </a>
       </div>
       <p>© 2024 CodingKirby. All Rights Reserved.</p>
-    </FooterStyle>
+    </StyledFooter>
   );
 };
 
-const FooterStyle = styled.footer`
+const StyledFooter = styled.footer`
   width: 100%;
   margin-top: auto;
   background: ${({ theme }) => theme.color.blur};

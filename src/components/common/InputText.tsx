@@ -5,8 +5,8 @@ interface Props
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onBlur"> {
   label?: string;
   placeholder?: string;
-  inputType?: "text" | "email" | "password" | "number";
-  onBlur?: (name: string, value: string) => void; // 커스텀 onBlur
+  inputType?: "number" | "select" | "textarea" | "text" | "email" | "password";
+  onBlur?: (name: string, value: string) => void;
 }
 
 const InputText = React.forwardRef<HTMLInputElement, Props>(
@@ -17,12 +17,12 @@ const InputText = React.forwardRef<HTMLInputElement, Props>(
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       if (onBlur) {
-        onBlur(name, value); // 커스텀 onBlur 호출
+        onBlur(name, value);
       }
     };
 
     return (
-      <InputTextStyle className="input-text">
+      <StyledInputText className="input-text">
         {label && <label>{label}</label>}
         <input
           placeholder={placeholder}
@@ -32,12 +32,12 @@ const InputText = React.forwardRef<HTMLInputElement, Props>(
           onChange={onChange}
           {...props}
         />
-      </InputTextStyle>
+      </StyledInputText>
     );
   }
 );
 
-const InputTextStyle = styled.div`
+const StyledInputText = styled.div`
   display: flex;
   width: 100%;
   line-height: 1.8;
@@ -50,13 +50,13 @@ const InputTextStyle = styled.div`
     outline: none;
     box-shadow: ${({ theme }) => theme.shadow.light};
     overflow: visible;
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.2rem;
     line-height: 1.8;
 
     color: ${({ theme }) => theme.color.text};
     background: ${({ theme }) => theme.color.blur};
     border-radius: ${({ theme }) => theme.borderRadius.default};
-    font-size: ${({ theme }) => theme.fontSize.extraSmall};
+    font-size: ${({ theme }) => theme.fontSize.small};
 
     &:focus {
       box-shadow: ${({ theme }) => theme.shadow.default};

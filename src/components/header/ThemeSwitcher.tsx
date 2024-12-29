@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { ThemeContext } from "../../../context/themeContext";
+import { ThemeContext } from "../../context/themeContext";
 import { MdLightMode, MdDarkMode } from "react-icons/md";
-import Button from "../../common/Button";
+import Button from "../common/Button";
 import React from "react";
 import { CSSProp } from "styled-components";
 

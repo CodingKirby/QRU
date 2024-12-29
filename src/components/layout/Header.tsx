@@ -4,10 +4,10 @@ import QRULogo from "../common/Logo";
 import Loading from "../common/Loading";
 import Button from "../common/Button";
 import Dropdown from "../common/Dropdown";
-import Navigation from "./header/Navigation";
-import ThemeSwitcher from "./header/ThemeSwitcher";
-import Drawer from "./header/Drawer";
-import Search from "./header/Search";
+import Navigation from "../header/Navigation";
+import ThemeSwitcher from "../header/ThemeSwitcher";
+import Drawer from "../header/Drawer";
+import Search from "../header/Search";
 import { FaGoogle, FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useResponsive } from "../../hooks/useResponsive";
@@ -73,7 +73,7 @@ function Header() {
               <>
                 <Button onClick={isLoggedIn ? handleLogout : handleGoogleLogin}>
                   <FaGoogle />
-                  로그인
+                  {!isMobileOpen && "로그인"}
                 </Button>
                 {!isMobileOpen && <ThemeSwitcher />}
               </>

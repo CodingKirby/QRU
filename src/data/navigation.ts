@@ -1,6 +1,6 @@
-import { Navigation } from "../models/navigation.model";
+import { INavigation } from "../types/navigationType";
 
-export const NAVIGATION: Navigation[] = [
+export const NAVIGATION: INavigation[] = [
   {
     title: "서비스 소개",
     link: "/#home-about",

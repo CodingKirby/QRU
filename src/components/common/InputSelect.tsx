@@ -1,8 +1,10 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { clearError } from "../../store/slices/errorSlice";
+import { useDispatch } from "react-redux";
 
-interface SelectBoxProps {
+interface Props {
   id?: string;
   name: string;
   label?: string;
@@ -14,7 +16,7 @@ interface SelectBoxProps {
   children?: React.ReactNode;
 }
 
-const Selector: React.FC<SelectBoxProps> = ({
+const InputSelect: React.FC<Props> = ({
   name,
   value,
   label,
@@ -24,29 +26,29 @@ const Selector: React.FC<SelectBoxProps> = ({
   placeholder = "선택하세요",
   children,
 }) => {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsOpen((prev) => !prev);
+    if (onBlur) {
+      onBlur(name, value);
+    }
   };
 
   const handleOptionClick = (optionValue: string) => {
-    onChange(optionValue); // 부모 컴포넌트에 값 전달
+    onChange(optionValue);
     setIsOpen(false);
-    if (onBlur) {
-      if (onBlur) onBlur(name, optionValue);
-    }
+
+    dispatch(clearError(name));
   };
 
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (selectRef.current && !selectRef.current.contains(e.target as Node)) {
-        setIsOpen(false); // 외부 클릭 시 닫기
-        if (onBlur) {
-          onBlur(name, value); // 현재 값을 onBlur로 전달
-        }
+        setIsOpen(false);
       }
     };
 
@@ -54,18 +56,18 @@ const Selector: React.FC<SelectBoxProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [value, name, onBlur]);
+  }, [name, value]);
 
   return (
-    <SelectorStyle ref={selectRef} $open={isOpen} className="select-box">
-      <label>{label}</label>
+    <StyledInputSelect ref={selectRef} $open={isOpen}>
+      {label && <label>{label}</label>}
       <div className="select-display" onClick={handleToggle}>
         {value
-          ? options.find((option) => option.value === value)?.label
+          ? options.find((option) => option.value === value)?.label ||
+            placeholder
           : placeholder}
         <IoMdArrowDropdown className={`select-arrow ${isOpen ? "open" : ""}`} />
       </div>
-      <div className="other-input">{children}</div>
       <ul className="options-list">
         {options.map((option) => (
           <li
@@ -79,7 +81,8 @@ const Selector: React.FC<SelectBoxProps> = ({
           </li>
         ))}
       </ul>
-    </SelectorStyle>
+      {children}
+    </StyledInputSelect>
   );
 };
 
@@ -87,7 +90,11 @@ interface StyleProps {
   $open: boolean;
 }
 
-const SelectorStyle = styled.div<StyleProps>`
+interface StyleProps {
+  $open: boolean;
+}
+
+const StyledInputSelect = styled.div<StyleProps>`
   position: relative;
 
   .select-display {
@@ -117,6 +124,7 @@ const SelectorStyle = styled.div<StyleProps>`
   }
 
   .options-list {
+    width: 100%;
     visibility: ${({ $open }) => ($open ? "visible" : "hidden")};
     max-height: ${({ $open }) => ($open ? "auto" : "0")};
     opacity: ${({ $open }) => ($open ? "1" : "0")};
@@ -157,4 +165,4 @@ const SelectorStyle = styled.div<StyleProps>`
   }
 `;
 
-export default Selector;
+export default InputSelect;

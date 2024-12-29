@@ -24,7 +24,12 @@ export type FontSize =
   | "extraSmall";
 export type HeadingSize = "extraLarge" | "large" | "medium" | "small";
 export type BorderRadius = "default" | "rounded";
-export type ButtonSize = "extraLarge" | "large" | "medium" | "small";
+export type ButtonSize =
+  | "extraLarge"
+  | "large"
+  | "medium"
+  | "small"
+  | "extraSmall";
 export type ButtonScheme = "primary" | "secondary" | "blur" | "default";
 export type Shadow = "default" | "strong" | "light" | "hover" | "none";
 export type LayoutWidth = "large" | "medium" | "small";
@@ -75,12 +80,12 @@ export const lightTheme: Theme = {
     secondaryVariant: "#a8edea",
     background: "linear-gradient(135deg, #a8edea, #fed6e3)",
     surface: "#fafafa",
-    error: "#E05A87",
-    onPrimary: "#fed6e3",
+    error: "#FFA0C0",
+    onPrimary: "#f4f4f4",
     onSecondary: "#213C48",
     onBackground: "#ffffff",
     onSurface: "#000000",
-    onError: "#2b2b2b",
+    onError: "#ffffff",
     blur: "rgba(255, 255, 255, 0.15)",
     text: "#213C48",
     onText: "#e0f7fa",
@@ -88,9 +93,9 @@ export const lightTheme: Theme = {
   fontSize: {
     extraLarge: "2rem",
     large: "1.5rem",
-    medium: "1.3rem",
-    small: "1.2rem",
-    extraSmall: "1rem",
+    medium: "1.2rem",
+    small: "1rem",
+    extraSmall: "0.8rem",
   },
   heading: {
     extraLarge: {
@@ -130,6 +135,11 @@ export const lightTheme: Theme = {
       fontSize: "1rem",
       padding: "0.3rem 0.8rem",
       gap: "0.3rem",
+    },
+    extraSmall: {
+      fontSize: "0.8rem",
+      padding: "0 0.5rem",
+      gap: "0.2rem",
     },
   },
   buttonScheme: {

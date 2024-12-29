@@ -5,12 +5,13 @@ import { queryClient } from "./api/queryClient";
 import { QRUThemeProvider } from "./context/themeContext";
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
-import NewCard from "./pages/NewCard";
 import MyPage from "./pages/MyPage";
 import MyCard from "./pages/MyCard";
 import Shuffle from "./pages/Shuffle";
 import NotFound from "./pages/NotFound";
 import Error from "./components/common/Error";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const routeList = [
   {
@@ -20,10 +21,6 @@ const routeList = [
   {
     path: "/mypage",
     element: <MyPage />,
-  },
-  {
-    path: "/cards",
-    element: <NewCard />,
   },
   {
     path: "/cards/:id",
@@ -53,7 +50,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <QRUThemeProvider>
-        <RouterProvider router={router} />
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
       </QRUThemeProvider>
     </QueryClientProvider>
   );

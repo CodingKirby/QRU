@@ -6,9 +6,9 @@ interface Props {
   onClick: () => void;
 }
 
-function QRULogoCard({ onClick }: Props) {
+function LogoCard({ onClick }: Props) {
   return (
-    <LogoCard>
+    <StyledLogoCard>
       <div className="content">
         <QRBox>
           <div></div>
@@ -41,11 +41,11 @@ function QRULogoCard({ onClick }: Props) {
           나만의 명함 만들기
         </Button>
       </div>
-    </LogoCard>
+    </StyledLogoCard>
   );
 }
 
-const LogoCard = styled.div`
+const StyledLogoCard = styled.div`
   width: 70%;
   min-width: 300px;
   max-width: ${({ theme }) => theme.layout.width.large};
@@ -201,4 +201,4 @@ const extraButtonStyles = css`
   }
 `;
 
-export default QRULogoCard;
+export default LogoCard;

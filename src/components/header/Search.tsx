@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import { styled } from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import Button from "../../common/Button";
-import InputText from "../../common/InputText";
+import Button from "../common/Button";
+import InputText from "../common/InputText";
 
 interface Props {
   isOpen: boolean;
@@ -86,7 +86,7 @@ function Search({
   };
 
   return (
-    <SearchStyle className="search" ref={containerRef} $open={isOpen}>
+    <StyledSearch className="search" ref={containerRef} $open={isOpen}>
       <InputText
         className="search-input"
         ref={inputRef}
@@ -96,7 +96,7 @@ function Search({
       <Button onMouseDown={handleToggle}>
         <FaSearch />
       </Button>
-    </SearchStyle>
+    </StyledSearch>
   );
 }
 
@@ -104,7 +104,7 @@ interface StyleProps {
   $open: boolean;
 }
 
-const SearchStyle = styled.div<StyleProps>`
+const StyledSearch = styled.div<StyleProps>`
   display: flex;
   flex: 1;
   width: 100%;

@@ -1,34 +1,32 @@
 import styled from "styled-components";
-import Dropdown from "../../common/Dropdown";
+import Dropdown from "../common/Dropdown";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Link } from "react-router-dom";
-import { NAVIGATION } from "../../../data/navigationData";
+import { NAVIGATION } from "../../data/navigation";
 
 function Drawer() {
   return (
     <Dropdown
       toggleButton={
-        <DrawerButtonStyle>
+        <StyledDrawerButton>
           <span></span>
           <span></span>
           <span></span>
-        </DrawerButtonStyle>
+        </StyledDrawerButton>
       }
       className="drawer"
     >
-      <>
-        <ThemeSwitcher />
-        {NAVIGATION.map((item, index) => (
-          <Link to={item.link} key={index} className="item">
-            {item.title}
-          </Link>
-        ))}
-      </>
+      <ThemeSwitcher />
+      {NAVIGATION.map((item, index) => (
+        <Link to={item.link} key={index} className="item">
+          {item.title}
+        </Link>
+      ))}
     </Dropdown>
   );
 }
 
-const DrawerButtonStyle = styled.div`
+const StyledDrawerButton = styled.div`
   position: relative;
   width: 1.5rem;
   aspect-ratio: 1.1 / 1;

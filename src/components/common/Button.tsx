@@ -27,7 +27,7 @@ function Button({
   ...props
 }: Props) {
   return (
-    <ButtonStyle
+    <StyledButton
       ref={ref}
       size={size}
       scheme={scheme}
@@ -39,14 +39,15 @@ function Button({
     >
       {icon && <div className="icon">{icon}</div>}
       {children}
-    </ButtonStyle>
+    </StyledButton>
   );
 }
 
-export const ButtonStyle = styled.button.withConfig({
+export const StyledButton = styled.button.withConfig({
   shouldForwardProp: (prop) =>
     !["isLoading", "styles", "boxShadow"].includes(prop),
 })<Omit<Props, "children" | "icon">>`
+  position: relative;
   min-height: 2.5rem;
   display: flex;
   align-items: center;
@@ -109,30 +110,36 @@ export const ButtonStyle = styled.button.withConfig({
 
   &[data-tooltip]:hover::after,
   &[data-tooltip]:focus::after {
-    width: 80%;
+    width: max-content;
+    max-width: 25rem;
     content: attr(data-tooltip);
     position: absolute;
-    top: 50%;
+    top: 100%;
     left: 50%;
-    transform: translateX(-50%);
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     padding: 1rem 1.5rem;
+
+    line-height: 1.8;
+    white-space: break-spaces;
+    text-align: left;
+
     background: ${({ theme }) => theme.color.error};
     color: ${({ theme }) => theme.color.onError};
     font-size: ${({ theme }) => theme.fontSize.extraSmall};
     border-radius: ${({ theme }) => theme.borderRadius.default};
     box-shadow: ${({ theme }) => theme.shadow.default};
-    white-space: pre-wrap;
-    text-align: left;
-    z-index: 1000;
+
+    z-index: 2000;
     opacity: 1;
-    transition: opacity 0.3s ease;
-    line-height: 1.8;
+    transform: scaleY(1);
+    transition: all 0.3s ease;
   }
 
   &[data-tooltip]::after {
-    opacity: 0;
     pointer-events: none;
+    opacity: 0;
+    transform-origin: top;
+    transform: scaleY(0);
   }
 
   ${({ styles }) => styles || ""}

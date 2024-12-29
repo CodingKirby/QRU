@@ -9,7 +9,7 @@ import { BiQrScan } from "react-icons/bi";
 
 const About: React.FC = () => {
   return (
-    <AboutStyle id="home-about">
+    <StyledAbout id="home-about">
       <section id="home-about-intro">
         <Title size="extraLarge">
           🧩 큐알유(QRU): QR코드로 만드는 디지털 명함
@@ -111,11 +111,11 @@ const About: React.FC = () => {
           </Button>
         </a>
       </section>
-    </AboutStyle>
+    </StyledAbout>
   );
 };
 
-const AboutStyle = styled.section`
+const StyledAbout = styled.section`
   display: grid;
   width: 100%;
   word-break: break-all;

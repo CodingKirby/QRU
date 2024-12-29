@@ -4,20 +4,21 @@ import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface Props {
+  label?: string;
   onChange: (date: Date | null) => void;
+  onBlur?: () => void;
 }
 
-const InputDate = ({ onChange }: Props) => {
+const InputDate = ({ label, onChange, onBlur }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
     onChange(date);
   };
 
   return (
-    <InputDateStyle>
-      <label htmlFor="custom-date-picker">생년월일</label>
+    <StyledInputDate>
+      {label && <label htmlFor="custom-date-picker">{label}</label>}
       <DatePicker
         id="custom-date-picker"
         selected={selectedDate}
@@ -31,16 +32,15 @@ const InputDate = ({ onChange }: Props) => {
         closeOnScroll={true}
         shouldCloseOnSelect={true}
         maxDate={new Date()}
+        onBlur={onBlur}
       />
-    </InputDateStyle>
+    </StyledInputDate>
   );
 };
 
-const InputDateStyle = styled.div`
+const StyledInputDate = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
   z-index: 1000;
 
   label {
@@ -52,8 +52,8 @@ const InputDateStyle = styled.div`
 
   .custom-datepicker {
     width: 100%;
-    padding: 0.5rem 1rem;
     border: none;
+    padding: 0.6rem 1.2rem;
     border-radius: ${({ theme }) => theme.borderRadius.default};
     background-color: ${({ theme }) => theme.color.blur};
     font-size: ${({ theme }) => theme.fontSize.small};

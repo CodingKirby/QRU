@@ -30,7 +30,7 @@ const InputCheck = React.forwardRef<HTMLInputElement, Props>(
     };
 
     return (
-      <InputCheckStyle $size={size} className="input-check">
+      <StyledInputCheck $size={size} className="input-check">
         {label && <label>{label}</label>}
         <input
           type="checkbox"
@@ -39,7 +39,7 @@ const InputCheck = React.forwardRef<HTMLInputElement, Props>(
           onChange={handleChange}
           {...props}
         />
-      </InputCheckStyle>
+      </StyledInputCheck>
     );
   }
 );
@@ -48,30 +48,47 @@ interface StyleProps {
   $size?: FontSize;
 }
 
-const InputCheckStyle = styled.div<StyleProps>`
+const StyledInputCheck = styled.div<StyleProps>`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
   user-select: none;
 
-  span {
-    color: ${({ theme }) => theme.color.text};
-    font-size: ${({ theme }) => theme.fontSize.small};
+  label {
+    will-change: transform, opacity;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(0.5rem);
+    transition: all 0.3s ease;
+    text-align: center;
+    font-size: ${({ theme }) => theme.fontSize.extraSmall};
+  }
+
+  &:hover label {
+    visibility: visible;
+    height: auto;
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.3s ease;
   }
 
   input {
-    max-width: ${({ $size, theme }) =>
-      $size ? theme.fontSize[$size] : theme.fontSize.extraLarge};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: ${({ $size, theme }) =>
+      $size ? theme.fontSize[$size] : theme.fontSize.large};
+    width: ${({ $size, theme }) =>
+      $size ? theme.fontSize[$size] : theme.fontSize.large};
     aspect-ratio: 1;
+
     cursor: pointer;
     appearance: none;
     border-radius: 8px;
     background: ${({ theme }) => theme.color.blur};
     box-shadow: ${({ theme }) => theme.shadow.light};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: ${({ $size, theme }) =>
-      $size ? theme.fontSize[$size] : theme.fontSize.medium};
 
     &:checked {
       background: ${({ theme }) => theme.color.primary};

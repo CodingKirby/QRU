@@ -11,17 +11,17 @@ function Error() {
   const error = useRouteError() as RouteError;
 
   return (
-    <ErrorStyle>
+    <StyledError>
       <Title size="extraLarge" color="error">
         오류가 발생했습니다.
       </Title>
       <Title size="small">다음과 같은 오류가 발생했습니다.</Title>
       <Title size="small">{error.statusText || error.message}</Title>
-    </ErrorStyle>
+    </StyledError>
   );
 }
 
-const ErrorStyle = styled.div`
+const StyledError = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

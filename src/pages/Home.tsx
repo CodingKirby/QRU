@@ -1,32 +1,36 @@
 import { useState } from "react";
-import QRULogoCard from "../components/home/QRULogoCard";
+import { useDispatch } from "react-redux";
+import { clearAllErrors } from "../store/slices/errorSlice";
+import { resetForm } from "../store/slices/formSlice";
+
 import styled from "styled-components";
-import Modal from "../components/common/Modal";
-import CardForm from "../components/home/CardForm";
 import About from "../components/home/About";
+import LogoCard from "../components/home/LogoCard";
+import Modal from "../components/common/Modal";
+import NewCard from "../components/home/NewCard";
 
 function Home() {
+  const dispatch = useDispatch();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  const children = CardForm({ isOpen: isModalOpen }).props.children;
-  const header = children[0];
-  const content = children[1];
+  const closeModal = () => {
+    dispatch(resetForm());
+    dispatch(clearAllErrors());
+    setIsModalOpen(false);
+  };
 
   return (
     <HomeStyle>
       <section id="home-card">
-        <QRULogoCard onClick={openModal} />
+        <LogoCard onClick={openModal} />
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <NewCard isOpen={isModalOpen} onClose={closeModal} />
+        </Modal>
       </section>
       <section id="home-about">
         <About />
       </section>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        {header}
-        {content}
-      </Modal>
     </HomeStyle>
   );
 }
