@@ -37,5 +37,4 @@ const errorSlice = createSlice({
 });
 
 export const { setError, clearError, clearAllErrors } = errorSlice.actions;
-export const errorReducer = errorSlice.reducer;
 export default errorSlice.reducer;

@@ -1,4 +1,9 @@
-// Header.tsx
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../store";
+import { login, logout } from "../../store/slices/authSlice";
+import { useResponsive } from "../../hooks/useResponsive";
+
 import styled from "styled-components";
 import QRULogo from "../common/Logo";
 import Loading from "../common/Loading";
@@ -9,14 +14,12 @@ import ThemeSwitcher from "../header/ThemeSwitcher";
 import Drawer from "../header/Drawer";
 import Search from "../header/Search";
 import { FaGoogle, FaUserCircle } from "react-icons/fa";
-import { useAuth } from "../../hooks/useAuth";
-import { useResponsive } from "../../hooks/useResponsive";
-import { Link } from "react-router-dom";
 
 function Header() {
-  const { user, isLoading, handleGoogleLogin, handleLogout } = useAuth();
-  const { isSearchOpen, isMobileOpen, toggleSearch } = useResponsive();
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, isLoading } = useSelector((state: RootState) => state.auth);
   const isLoggedIn = !!user;
+  const { isSearchOpen, isMobileOpen, toggleSearch } = useResponsive();
 
   return (
     <HeaderStyle $isSearchOpen={isSearchOpen}>
@@ -62,7 +65,7 @@ function Header() {
                   <Button
                     className="item"
                     boxShadow="none"
-                    onClick={handleLogout}
+                    onClick={() => dispatch(logout())}
                   >
                     <FaGoogle />
                     로그아웃
@@ -71,7 +74,15 @@ function Header() {
               </Dropdown>
             ) : (
               <>
-                <Button onClick={isLoggedIn ? handleLogout : handleGoogleLogin}>
+                <Button
+                  onClick={() => {
+                    if (isLoggedIn) {
+                      dispatch(logout());
+                    } else {
+                      dispatch(login());
+                    }
+                  }}
+                >
                   <FaGoogle />
                   {!isMobileOpen && "로그인"}
                 </Button>
