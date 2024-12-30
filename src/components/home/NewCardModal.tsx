@@ -135,19 +135,17 @@ function NewCardModal() {
     }
   };
 
+  const latestError = errors[errors.length - 1];
   useEffect(() => {
-    if (errors.length > 0) {
-      const latestError = errors[errors.length - 1];
-      if (latestError) {
-        dispatch(
-          addToast({
-            type: "error",
-            message: latestError.message,
-          })
-        );
-      }
+    if (latestError) {
+      dispatch(
+        addToast({
+          type: "error",
+          message: latestError.message,
+        })
+      );
     }
-  }, [errors, dispatch]);
+  }, [latestError, dispatch]);
 
   const validatePassword = async () => {
     if (password.length < 6) {
@@ -202,6 +200,8 @@ function NewCardModal() {
                   required: true,
                   label: "추가 정보",
                   type: "custom" as FieldType,
+                  minLength: 1,
+                  maxLength: 200,
                 })),
               ]}
               onSubmit={handleSubmit}

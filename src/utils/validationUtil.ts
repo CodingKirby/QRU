@@ -36,6 +36,25 @@ export const validateFields = (
       return;
     }
 
+    // 최소/최대 길이 검증
+    if (field.minLength && value?.length < field.minLength) {
+      errors.push({
+        fieldId: field.id,
+        message: `"${field.label}"은(는) 최소 ${field.minLength}자 이상 입력해야 합니다.`,
+      });
+      isValid = false;
+      return;
+    }
+
+    if (field.maxLength && value?.length > field.maxLength) {
+      errors.push({
+        fieldId: field.id,
+        message: `"${field.label}"은(는) 최대 ${field.maxLength}자까지 입력할 수 있습니다.`,
+      });
+      isValid = false;
+      return;
+    }
+
     // 형식 검증
     if (field.type === "email" && value) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,6 +65,7 @@ export const validateFields = (
         });
         isValid = false;
       }
+      return;
     }
 
     if (field.type === "number" && value) {
@@ -56,6 +76,7 @@ export const validateFields = (
         });
         isValid = false;
       }
+      return;
     }
   });
 

@@ -1,52 +1,55 @@
-import { ToastItem, removeToast } from "../../../store/slices/toastSlice";
-import styled from "styled-components";
-import { FaCheck, FaInfoCircle } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { ToastItem, removeToast } from "../../../store/slices/toastSlice";
+
+import styled from "styled-components";
 import Button from "../Button";
+import { FaCheck, FaInfoCircle } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
-function Toast({ id, message, type, duration = 3000 }: ToastItem) {
-  const dispatch = useDispatch();
-  const [isFadingOut, setIsFadingOut] = useState(false);
+const Toast = React.memo(
+  ({ id, message, type, duration = 3000 }: ToastItem) => {
+    const dispatch = useDispatch();
+    const [isFadingOut, setIsFadingOut] = useState(false);
 
-  // Toast를 사라지게 하는 함수
-  const startFadeOut = () => {
-    setIsFadingOut(true);
-  };
+    // Toast를 사라지게 하는 함수
+    const startFadeOut = () => {
+      setIsFadingOut(true);
+    };
 
-  // Toast가 나타난 후 duration 이후 fade-out 시작
-  useEffect(() => {
-    const timer = setTimeout(startFadeOut, duration);
+    // Toast가 나타난 후 duration 이후 fade-out 시작
+    useEffect(() => {
+      const timer = setTimeout(startFadeOut, duration);
 
-    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
-  }, [duration]);
+      return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
+    }, [duration]);
 
-  // Fade-out 애니메이션이 끝난 후 Redux 상태에서 제거
-  const handleAnimationEnd = () => {
-    if (isFadingOut) {
-      dispatch(removeToast(id));
-    }
-  };
+    // Fade-out 애니메이션이 끝난 후 Redux 상태에서 제거
+    const handleAnimationEnd = () => {
+      if (isFadingOut) {
+        dispatch(removeToast(id));
+      }
+    };
 
-  return (
-    <ToastStyle
-      className={`${isFadingOut ? "fade-out" : "fade-in"} ${type}`}
-      onAnimationEnd={handleAnimationEnd}
-    >
-      <p>
-        {type === "info" && <FaInfoCircle />}
-        {type === "success" && <FaCheck />}
-        {type === "error" && <IoIosWarning />}
-        {message}
-      </p>
-      <Button scheme="secondary" boxShadow="none" onClick={startFadeOut}>
-        <IoClose />
-      </Button>
-    </ToastStyle>
-  );
-}
+    return (
+      <ToastStyle
+        className={`${isFadingOut ? "fade-out" : "fade-in"} ${type}`}
+        onAnimationEnd={handleAnimationEnd}
+      >
+        <p>
+          {type === "info" && <FaInfoCircle />}
+          {type === "success" && <FaCheck />}
+          {type === "error" && <IoIosWarning />}
+          {message}
+        </p>
+        <Button scheme="secondary" boxShadow="none" onClick={startFadeOut}>
+          <IoClose />
+        </Button>
+      </ToastStyle>
+    );
+  }
+);
 
 const ToastStyle = styled.div`
   @keyframes fade-in {

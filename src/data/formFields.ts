@@ -7,6 +7,8 @@ export const FORM_FIELDS: IFormField[] = [
     label: "한 줄 자기소개",
     type: "text",
     placeholder: "자신을 표현할 수 있는 문구를 입력해주세요.",
+    minLength: 5,
+    maxLength: 80,
   },
   {
     required: true,
@@ -14,6 +16,8 @@ export const FORM_FIELDS: IFormField[] = [
     label: "이름",
     type: "text",
     placeholder: "이름을 입력하세요.",
+    minLength: 2,
+    maxLength: 20,
   },
   {
     required: true,
@@ -36,7 +40,7 @@ export const FORM_FIELDS: IFormField[] = [
         id: "birthday",
         label: "생일",
         type: "text",
-        placeholder: "성별을 입력하세요.",
+        placeholder: "생일을 입력하세요.",
         disabled: [false, true],
       },
       {
@@ -53,6 +57,8 @@ export const FORM_FIELDS: IFormField[] = [
     label: "이메일",
     type: "email",
     placeholder: "이메일을 입력하세요.",
+    minLength: 5,
+    maxLength: 50,
   },
   {
     id: "sns",
@@ -71,6 +77,8 @@ export const FORM_FIELDS: IFormField[] = [
         label: "아이디",
         type: "text",
         placeholder: "아이디를 입력하세요.",
+        minLength: 2,
+        maxLength: 50,
       },
     ],
   },
@@ -102,17 +110,23 @@ export const FORM_FIELDS: IFormField[] = [
     label: "취미/관심사",
     type: "text",
     placeholder: "취미를 입력하세요.",
+    minLength: 1,
+    maxLength: 120,
   },
   {
     id: "likes",
     label: "좋아하는 것",
     type: "text",
     placeholder: "좋아하는 것을 입력하세요.",
+    minLength: 1,
+    maxLength: 120,
   },
   {
     id: "dislikes",
     label: "싫어하는 것",
     type: "text",
     placeholder: "싫어하는 것을 입력하세요.",
+    minLength: 1,
+    maxLength: 120,
   },
 ];
