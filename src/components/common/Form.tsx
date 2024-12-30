@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setError, clearError } from "../../store/slices/errorSlice";
+import { setFormData, setIsPublic } from "../../store/slices/formSlice";
 import { IFormField, IFormSubmit } from "../../types/formType";
 import { validateFields } from "../../utils/validationUtil";
 
@@ -11,6 +12,7 @@ import InputCheck from "./InputCheck";
 import Button from "./Button";
 import InputDate from "./InputDate";
 import { FaTrash } from "react-icons/fa";
+import { RootState } from "../../store";
 
 interface Props {
   fields: IFormField[];
@@ -19,42 +21,32 @@ interface Props {
 }
 
 const Form: React.FC<Props> = ({ fields, onSubmit, onCustomFieldRemove }) => {
-  const [formData, setFormData] = useState<Record<string, string>>(
-    fields.reduce(
-      (acc, field) => ({ ...acc, [field.id]: field.value || "" }),
-      {}
-    )
-  );
-
-  const [isPublic, setIsPublic] = useState<Record<string, boolean>>(
-    fields.reduce((acc, field) => ({ ...acc, [field.id]: field.required }), {})
-  );
-
   const dispatch = useDispatch();
+  const formData = useSelector((state: RootState) => state.form.formData);
+  const isPublic = useSelector((state: RootState) => state.form.isPublic);
 
+  // 필드 변경 핸들러
   const handleFieldChange = (id: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    dispatch(setFormData({ id, value }));
     if (value.trim() !== "") {
       dispatch(clearError(id));
     }
   };
 
+  // 필드 포커스 해제 시 검증
   const handleBlur = (id: string) => {
     const field = fields.find((field) => field.id === id);
-    if (field?.required) {
-      if (!formData[id]?.trim()) {
-        dispatch(
-          setError({
-            fieldId: id,
-            message: `"${field.label}" 란은 필수 입력 사항입니다.`,
-          })
-        );
-      } else {
-        dispatch(clearError(id));
-      }
+    if (field?.required && !formData[id]?.trim()) {
+      dispatch(
+        setError({
+          fieldId: id,
+          message: `"${field.label}" 란은 필수 입력 사항입니다.`,
+        })
+      );
     }
   };
 
+  // 생년월일에 따라 나이 계산
   const calculateAge = (birthDate: Date): number => {
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -68,145 +60,140 @@ const Form: React.FC<Props> = ({ fields, onSubmit, onCustomFieldRemove }) => {
     return age;
   };
 
+  // 날짜 변경 핸들러
   const handleDateChange = (id: string, date: Date | null) => {
+    const value = date?.toISOString() ?? "";
+    dispatch(setFormData({ id, value }));
+
     if (id === "birth" && date) {
       const age = calculateAge(date);
-      setFormData((prev) => ({
-        ...prev,
-        [id]: date.toISOString().split("T")[0],
-        birth_birthday: date.toLocaleDateString("ko-KR"),
-        birth_age: age.toString(),
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [id]: date ? date.toISOString().split("T")[0] : "",
-      }));
+      dispatch(setFormData({ id: "age", value: age.toString() }));
     }
   };
 
+  // 체크박스 토글 핸들러
   const handleCheckboxToggle = (id: string, checked: boolean) => {
-    setIsPublic((prev) => ({ ...prev, [id]: checked }));
+    dispatch(setIsPublic({ id, value: checked }));
   };
 
+  // 폼 제출 핸들러
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const { isValid, errors } = validateFields(fields, formData, isPublic);
 
     if (!isValid) {
-      errors.forEach((error) => {
-        dispatch(setError(error));
-      });
+      errors.forEach((error) => dispatch(setError(error)));
       return;
     }
 
-    onSubmit({ values: formData, isPublic });
+    onSubmit({ values: formData, isPublic: isPublic });
   };
 
+  // 필드 렌더링
   const renderField = (field: IFormField) => {
+    const { id, type, label, options, placeholder, required, subFields } =
+      field;
+
     return (
       <div
-        className={`form-group ${field.type === "custom" ? "custom" : ""}`}
-        key={field.id}
+        className={`form-group ${type === "custom" ? "custom" : ""}`}
+        key={id}
       >
         <div className="form-field">
-          <label className="field-label" htmlFor={field.id}>
-            {field.label}
-            {field.required && <span className="required">*</span>}
+          <label className="field-label" htmlFor={id}>
+            {label}
+            {required && <span className="required">*</span>}
           </label>
-          {!field.subFields && (
+          {!subFields && (
             <InputCheck
-              name={field.id}
+              name={id}
               label={`공개`}
               onChange={(name, checked) => handleCheckboxToggle(name, checked)}
-              checked={isPublic[field.id]}
+              checked={isPublic[id] ?? false}
               disabled={field.disabled?.[0] ?? false}
             />
           )}
           <div className="form-buttons">
-            {field.type === "custom" && (
-              <Button
-                size="extraSmall"
-                onClick={() => onCustomFieldRemove?.(field.id)}
-              >
+            {type === "custom" && onCustomFieldRemove && (
+              <Button size="extraSmall" onClick={() => onCustomFieldRemove(id)}>
                 <FaTrash />
               </Button>
             )}
           </div>
         </div>
-        {field.type === "select" && field.options ? (
+
+        {/* Input 타입별 렌더링 */}
+        {type === "select" && options ? (
           <>
             <InputSelect
-              name={field.id}
-              value={formData[field.id]}
-              options={field.options || []}
-              onChange={(value) => handleFieldChange(field.id, value)}
-              placeholder={field.placeholder}
-              onBlur={() => handleBlur(field.id)}
+              name={id}
+              value={formData[id] ?? ""}
+              options={options}
+              onChange={(value) => handleFieldChange(id, value)}
+              placeholder={placeholder}
+              onBlur={() => handleBlur(id)}
             />
-            {formData[field.id] === "self" && (
+            {formData[id] === "self" && (
               <InputText
-                placeholder={`${field.label} 입력`}
-                value={formData[`${field.id}_self`] || ""}
+                placeholder={`${label} 입력`}
+                value={formData[`${id}_self`] || ""}
                 onChange={(e) =>
-                  handleFieldChange(`${field.id}_self`, e.target.value)
+                  handleFieldChange(`${id}_self`, e.target.value)
                 }
-                onBlur={() => handleBlur(`${field.id}_self`)}
+                onBlur={() => handleBlur(`${id}_self`)}
               />
             )}
           </>
-        ) : field.type === "date" ? (
+        ) : type === "date" ? (
           <InputDate
-            onChange={(date) => handleDateChange(field.id, date)}
-            onBlur={() => handleBlur(field.id)}
+            onChange={(date) => handleDateChange(id, date)}
+            onBlur={() => handleBlur(id)}
           />
-        ) : field.type === "custom" ? (
+        ) : type === "custom" ? (
           <>
             <InputSelect
-              name={field.id}
-              value={formData[field.id]}
-              options={field.options || []}
-              onChange={(value) => handleFieldChange(field.id, value)}
-              placeholder={field.placeholder}
-              onBlur={() => handleBlur(field.id)}
+              name={id}
+              value={formData[id] || ""}
+              options={options || []}
+              onChange={(value) => handleFieldChange(id, value)}
+              placeholder={placeholder}
+              onBlur={() => handleBlur(id)}
             />
-            {formData[field.id] === "self" && (
+            {formData[id] === "self" && (
               <InputText
-                placeholder={`${field.label} 제목 입력`}
-                value={formData[`${field.id}_self`] || ""}
+                placeholder={`${label} 제목 입력`}
+                value={formData[`${id}_self`] || ""}
                 onChange={(e) =>
-                  handleFieldChange(`${field.id}_self`, e.target.value)
+                  handleFieldChange(`${id}_self`, e.target.value)
                 }
-                onBlur={() => handleBlur(`${field.id}_self`)}
+                onBlur={() => handleBlur(`${id}_self`)}
               />
             )}
             <InputText
-              placeholder={`${field.label} 내용 입력`}
-              value={formData[`${field.id}_value`] || ""}
-              onChange={(e) =>
-                handleFieldChange(`${field.id}_value`, e.target.value)
-              }
-              onBlur={() => handleBlur(field.id)}
+              placeholder={`${label} 내용 입력`}
+              value={formData[`${id}_value`] || ""}
+              onChange={(e) => handleFieldChange(`${id}_value`, e.target.value)}
+              onBlur={() => handleBlur(id)}
             />
           </>
         ) : (
           <InputText
-            name={field.id}
-            placeholder={field.placeholder}
-            value={formData[field.id]}
-            onChange={(e) => handleFieldChange(field.id, e.target.value)}
+            name={id}
+            placeholder={placeholder}
+            value={formData[id] || ""}
+            onChange={(e) => handleFieldChange(id, e.target.value)}
             disabled={field.disabled?.[1] ?? false}
-            onBlur={() => handleBlur(field.id)}
+            onBlur={() => handleBlur(id)}
           />
         )}
 
-        {field.subFields &&
-          formData[field.id] &&
-          field.subFields.map((subField) =>
+        {/* SubField 렌더링 */}
+        {subFields &&
+          subFields.map((subField) =>
             renderField({
               ...subField,
-              id: `${field.id}_${subField.id}`,
+              id: `${id}_${subField.id}`,
             })
           )}
       </div>
