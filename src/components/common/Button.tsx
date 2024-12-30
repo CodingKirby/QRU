@@ -104,6 +104,7 @@ export const StyledButton = styled.button.withConfig({
   }
 
   &:hover {
+    color: ${({ theme }) => theme.color.text};
     background: ${({ theme }) => theme.color.blur};
     box-shadow: ${({ theme }) => theme.shadow.default};
   }
