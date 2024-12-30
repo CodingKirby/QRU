@@ -27,7 +27,7 @@ const Form: React.FC<Props> = ({ fields, onSubmit, onCustomFieldRemove }) => {
 
   // 필드 변경 핸들러
   const handleFieldChange = (id: string, value: string) => {
-    dispatch(setFormData({ id, value }));
+    dispatch(setFormData({ id, value: value || "" }));
     if (value.trim() !== "") {
       dispatch(clearError(id));
     }
