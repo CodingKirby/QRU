@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import Error from "./components/common/Error";
 import { Provider } from "react-redux";
 import store from "./store";
+import ToastContainer from "./components/common/toast/ToastContainer";
 
 const routeList = [
   {
@@ -52,6 +53,7 @@ function App() {
       <QRUThemeProvider>
         <Provider store={store}>
           <RouterProvider router={router} />
+          <ToastContainer />
         </Provider>
       </QRUThemeProvider>
     </QueryClientProvider>
