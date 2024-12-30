@@ -62,12 +62,26 @@ const Form: React.FC<Props> = ({ fields, onSubmit, onCustomFieldRemove }) => {
 
   // 날짜 변경 핸들러
   const handleDateChange = (id: string, date: Date | null) => {
-    const value = date?.toISOString() ?? "";
+    if (!date) {
+      dispatch(setFormData({ id, value: "" }));
+      return;
+    }
+
+    const value = date.toLocaleDateString();
     dispatch(setFormData({ id, value }));
 
-    if (id === "birth" && date) {
+    if (id === "birth") {
       const age = calculateAge(date);
-      dispatch(setFormData({ id: "age", value: age.toString() }));
+      dispatch(
+        setFormData({
+          id: "birth_birthday",
+          value: date.toLocaleDateString("ko-KR", {
+            month: "long", // "1월", "2월"처럼 표시
+            day: "numeric", // "1일", "2일"처럼 표시
+          }),
+        })
+      );
+      dispatch(setFormData({ id: "birth_age", value: age.toString() }));
     }
   };
 

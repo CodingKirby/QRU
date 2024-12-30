@@ -1,26 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export interface CustomField {
-  id: string;
-  label: string;
-  value: string;
-  type?: "custom";
-}
-
-export interface FormField {
-  required?: boolean;
-  id: string;
-  label: string;
-  type: "text" | "email" | "password" | "number" | "select" | "date" | "custom";
-  placeholder?: string;
-  options?: { label: string; value: string }[];
-  value?: string;
-  subFields?: FormField[];
-  disabled?: [boolean, boolean];
-}
+import { ICustomField } from "../../types/formType";
 
 export interface FormState {
-  customFields: CustomField[];
+  customFields: ICustomField[];
   formData: Record<string, string>;
   isPublic: Record<string, boolean>;
 }
