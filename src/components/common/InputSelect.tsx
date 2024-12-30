@@ -1,8 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { clearError } from "../../store/slices/errorSlice";
-import { useDispatch } from "react-redux";
 
 interface Props {
   id?: string;
@@ -26,37 +24,45 @@ const InputSelect: React.FC<Props> = ({
   placeholder = "선택하세요",
   children,
 }) => {
-  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsOpen((prev) => !prev);
-    if (onBlur) {
-      onBlur(name, value);
-    }
   };
 
   const handleOptionClick = (optionValue: string) => {
     onChange(optionValue);
     setIsOpen(false);
 
-    dispatch(clearError(name));
+    // onBlur 호출
+    if (!optionValue && onBlur) {
+      onBlur(name, optionValue);
+    }
   };
 
-  React.useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+  const handleClickOutside = useCallback(
+    (e: MouseEvent) => {
       if (selectRef.current && !selectRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
+        if (isOpen) {
+          if (onBlur) {
+            onBlur(name, "");
+          }
 
+          setIsOpen(false);
+        }
+      }
+    },
+    [isOpen, name, onBlur]
+  );
+
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [name, value]);
+  }, [handleClickOutside]);
 
   return (
     <StyledInputSelect ref={selectRef} $open={isOpen}>
