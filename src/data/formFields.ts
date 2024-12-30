@@ -49,14 +49,12 @@ export const FORM_FIELDS: IFormField[] = [
     ],
   },
   {
-    required: false,
     id: "email",
     label: "이메일",
     type: "email",
     placeholder: "이메일을 입력하세요.",
   },
   {
-    required: false,
     id: "sns",
     label: "SNS",
     type: "select",
@@ -77,7 +75,6 @@ export const FORM_FIELDS: IFormField[] = [
     ],
   },
   {
-    required: false,
     id: "mbti",
     label: "MBTI",
     type: "select",
@@ -101,10 +98,21 @@ export const FORM_FIELDS: IFormField[] = [
     ],
   },
   {
-    required: false,
     id: "hobby",
-    label: "취미",
+    label: "취미/관심사",
     type: "text",
     placeholder: "취미를 입력하세요.",
+  },
+  {
+    id: "likes",
+    label: "좋아하는 것",
+    type: "text",
+    placeholder: "좋아하는 것을 입력하세요.",
+  },
+  {
+    id: "dislikes",
+    label: "싫어하는 것",
+    type: "text",
+    placeholder: "싫어하는 것을 입력하세요.",
   },
 ];

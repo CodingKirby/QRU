@@ -1,32 +1,20 @@
-import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { clearAllErrors } from "../store/slices/errorSlice";
-import { resetForm } from "../store/slices/formSlice";
+import { openModal } from "../store/slices/modalSlice";
 
 import styled from "styled-components";
 import About from "../components/home/About";
 import LogoCard from "../components/home/LogoCard";
-import Modal from "../components/common/Modal";
-import NewCard from "../components/home/NewCard";
+
+import NewCardModal from "../components/home/NewCardModal";
 
 function Home() {
   const dispatch = useDispatch();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {
-    dispatch(resetForm());
-    dispatch(clearAllErrors());
-    setIsModalOpen(false);
-  };
-
   return (
     <HomeStyle>
       <section id="home-card">
-        <LogoCard onClick={openModal} />
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <NewCard isOpen={isModalOpen} onClose={closeModal} />
-        </Modal>
+        <LogoCard onClick={() => dispatch(openModal())} />
+        <NewCardModal />
       </section>
       <section id="home-about">
         <About />

@@ -28,7 +28,11 @@ export interface FormState {
 const initialState: FormState = {
   customFields: [],
   formData: {},
-  isPublic: {},
+  isPublic: {
+    bio: true,
+    name: true,
+    gender: true,
+  },
 };
 
 const formSlice = createSlice({
@@ -61,10 +65,8 @@ const formSlice = createSlice({
         (field) => field.id !== action.payload
       );
     },
-    resetForm: (state) => {
-      state.customFields = [];
-      state.formData = {};
-      state.isPublic = {};
+    resetForm: () => {
+      return initialState;
     },
   },
 });

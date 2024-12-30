@@ -30,7 +30,12 @@ export type ButtonSize =
   | "medium"
   | "small"
   | "extraSmall";
-export type ButtonScheme = "primary" | "secondary" | "blur" | "default";
+export type ButtonScheme =
+  | "primary"
+  | "secondary"
+  | "blur"
+  | "error"
+  | "default";
 export type Shadow = "default" | "strong" | "light" | "hover" | "none";
 export type LayoutWidth = "large" | "medium" | "small";
 export type MediaQuery = "mobile" | "tablet" | "desktop";
@@ -144,7 +149,7 @@ export const lightTheme: Theme = {
   },
   buttonScheme: {
     primary: {
-      color: "#ffffff",
+      color: "#f4f4f4",
       backgroundColor: "#4db6ac",
     },
     secondary: {
@@ -154,6 +159,10 @@ export const lightTheme: Theme = {
     blur: {
       color: "#213C48",
       backgroundColor: "rgba(255, 255, 255, 0.15)",
+    },
+    error: {
+      color: "#ffffff",
+      backgroundColor: "#FFA0C0",
     },
     default: {
       color: "#213C48",
@@ -228,6 +237,10 @@ export const darkTheme: Theme = {
     blur: {
       color: "#e8e8e8",
       backgroundColor: "rgba(1, 1, 1, 0.15)",
+    },
+    error: {
+      color: "#ffffff",
+      backgroundColor: "#cf6679",
     },
     default: {
       color: "#ffffff",

@@ -104,6 +104,7 @@ export const StyledButton = styled.button.withConfig({
   }
 
   &:hover {
+    color: ${({ theme }) => theme.color.text};
     background: ${({ theme }) => theme.color.blur};
     box-shadow: ${({ theme }) => theme.shadow.default};
   }
@@ -111,11 +112,11 @@ export const StyledButton = styled.button.withConfig({
   &[data-tooltip]:hover::after,
   &[data-tooltip]:focus::after {
     width: max-content;
-    max-width: 25rem;
+    max-width: calc(60vw - 2rem);
     content: attr(data-tooltip);
     position: absolute;
     top: 100%;
-    left: 50%;
+    left: 0;
     margin-top: 0.5rem;
     padding: 1rem 1.5rem;
 
@@ -129,7 +130,6 @@ export const StyledButton = styled.button.withConfig({
     border-radius: ${({ theme }) => theme.borderRadius.default};
     box-shadow: ${({ theme }) => theme.shadow.default};
 
-    z-index: 2000;
     opacity: 1;
     transform: scaleY(1);
     transition: all 0.3s ease;
