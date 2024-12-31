@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./api/queryClient";
+import { Provider } from "react-redux";
+import store from "./store";
 
 import { QRUThemeProvider } from "./context/themeContext";
 import Layout from "./components/layout/Layout";
@@ -10,8 +12,6 @@ import MyCard from "./pages/MyCard";
 import Shuffle from "./pages/Shuffle";
 import NotFound from "./pages/NotFound";
 import Error from "./components/common/Error";
-import { Provider } from "react-redux";
-import store from "./store";
 import ToastContainer from "./components/common/toast/ToastContainer";
 
 const routeList = [
