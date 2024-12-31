@@ -12,10 +12,8 @@ export type ColorKey =
   | "onSecondary" // 보조 색상 위의 텍스트 색상
   | "onBackground" // 배경 색상 위의 텍스트 색상
   | "onSurface" // 표면 색상 위의 텍스트 색상
-  | "onError" // 오류 색상 위의 텍스트 색상
   | "blur" // 흐린 색상
-  | "text" // 텍스트 색상
-  | "onText"; // 텍스트 위의 색상
+  | "text"; // 텍스트 색상
 export type FontSize =
   | "extraLarge"
   | "large"
@@ -77,7 +75,7 @@ interface Theme {
 }
 
 export const lightTheme: Theme = {
-  name: "dark",
+  name: "light",
   color: {
     primary: "#4db6ac",
     primaryVariant: "#00867d",
@@ -90,10 +88,8 @@ export const lightTheme: Theme = {
     onSecondary: "#213C48",
     onBackground: "#ffffff",
     onSurface: "#000000",
-    onError: "#ffffff",
     blur: "rgba(255, 255, 255, 0.15)",
     text: "#213C48",
-    onText: "#e0f7fa",
   },
   fontSize: {
     extraLarge: "2rem",
@@ -196,7 +192,7 @@ export const lightTheme: Theme = {
 
 export const darkTheme: Theme = {
   ...lightTheme,
-  name: "light",
+  name: "dark",
   color: {
     primary: "#00867d",
     primaryVariant: "#4db6ac",
@@ -209,10 +205,8 @@ export const darkTheme: Theme = {
     onSecondary: "#ffffff",
     onBackground: "#ffffff",
     onSurface: "#ffffff",
-    onError: "#ffffff",
     blur: "rgba(1, 1, 1, 0.1)",
     text: "#e8e8e8",
-    onText: "#00867d",
   },
   shadow: {
     default:
