@@ -1,12 +1,19 @@
 import { createGlobalStyle } from "styled-components";
 import "sanitize.css";
 import { ThemeName } from "./theme";
+import Pretendard from "../assets/fonts/Pretendard.woff2";
 
 interface Props {
   themeName: ThemeName;
 }
 
 export const GlobalStyle = createGlobalStyle<Props>`
+  @font-face {
+    font-family: 'Pretendard';
+    src: local('Pretendard'), url(${Pretendard}) format('woff2');
+    font-weight: normal;
+  }
+
   html,body {
     margin: 0;
     padding: 0;
@@ -28,7 +35,7 @@ export const GlobalStyle = createGlobalStyle<Props>`
   }
 
   * {
-    font-family: 'Poppins', 'Noto Sans KR', sans-serif;
+    font-family: 'Poppins', 'Noto Sans KR', 'Pretendard', sans-serif;
     user-select: none;
     -webkit-user-select: none; /* 사파리 호환 */
     -ms-user-select: none; /* 옛날 IE 호환 */
