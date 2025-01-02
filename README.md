@@ -255,6 +255,7 @@ QRU/
 | `fix` | 버그 수정 | `fix: 로그인 실패 문제 해결` |
 | `docs` | 문서 관련 변경 (README, 주석 등) | `docs: README에 실습 개요 추가` |
 | `style` | 코드 스타일 변경 (공백, 세미콜론 등) | `style: 불필요한 줄바꿈 제거` |
+| `design` | 기능 변경 없이 CSS 스타일 등의 UI/UX 변경 | `design: 전역 스타일(theme) 색상 변경` |
 | `refactor` | 코드 리팩토링 (기능 변경 없음) | `refactor: 데이터 처리 로직 간소화` |
 | `test` | 테스트 코드 추가 또는 수정 | `test: 회원가입 기능에 대한 유닛 테스트 추가` |
 | `chore` | 설정 변경 및 기타 작업 | `chore: npm 패키지 업데이트` |
